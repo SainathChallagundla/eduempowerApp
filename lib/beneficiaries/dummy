@@ -1,0 +1,39 @@
+ /*()  async{ 
+            await getFilePath().then( await showDialog(
+                  context: context,
+                  builder: (context) => new  AlertDialog(
+                    title:  Text(this._filePath!=null?this._filePath:"a"),//FilePicker.getFilePath(type: FileType.IMAGE).toString()),
+                    content:StatefulBuilder(builder: (BuildContext ctxt, StateSetter setState){return TextField(
+                      decoration: new InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.greenAccent, width: 1.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.blue, width: 1.0),
+                          ),
+                          helperText: this._filePath),
+                    );
+                    })),
+                barrierDismissible: true,
+
+              ));
+              /* showDialog(
+                  context: context,
+                  builder: (ctxt) => new AlertDialog(
+                    title: Text(this._filePath),//FilePicker.getFilePath(type: FileType.IMAGE).toString()),
+                    content: TextField(
+                      decoration: new InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.greenAccent, width: 1.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.blue, width: 1.0),
+                          ),
+                          helperText: this._filePath),
+                    ), // Write to pick a file
+                  )
+              );*/
