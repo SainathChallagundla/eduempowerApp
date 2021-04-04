@@ -2,7 +2,7 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/models/organization.dart' as organization_model;
 import 'package:eduempower/helpers/organization.dart' as organization_helper;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class OrganizationPage extends StatefulWidget {
@@ -38,8 +38,11 @@ class OrganizationPageState extends State<OrganizationPage> {
   final storage = new FlutterSecureStorage();
 
   void getInit() async {
-    token = await storage.read(key: "token");
-    email = await storage.read(key: "email");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = await prefs.getString("token");
+    email = await prefs.getString("email");
+    //token = await storage.read(key: "token");
+    //email = await storage.read(key: "email");
     var item = await organization_helper.Organization()
         .getOrganization(url, email, token);
     setState(() {

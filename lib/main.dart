@@ -2,19 +2,24 @@ import 'package:eduempower/public/register.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/public/login.dart';
 import 'package:eduempower/home.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //void main() => runApp(MyApp());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final storage = new FlutterSecureStorage();
+  //final storage = new FlutterSecureStorage();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // Set default home.
   Widget _defaultHome = new UserLogin();
 
-  String _result = await storage.read(key: "token");
+  // String _result = await storage.read(key: "token");
+
+  String _result = prefs.getString("token");
+  print("===============TOKEN====================$_result");
 
   if (_result != null) {
     _defaultHome = new HomePage(

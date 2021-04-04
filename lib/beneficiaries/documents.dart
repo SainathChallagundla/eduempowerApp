@@ -9,8 +9,8 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:eduempower/models/beneficiarieDocuments.dart';
 import 'package:eduempower/models/beneficiarieTemplate.dart';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DocumentsPage extends StatefulWidget {
   final String id;
@@ -32,15 +32,19 @@ class DocumentsPageState extends State<DocumentsPage> {
   final String url =
       HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIE_DOCUMENTS;
 
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
 
   final txtDescController = TextEditingController();
 
   final globalKey = GlobalKey<ScaffoldState>();
 
   void getInit() async {
-    token = await storage.read(key: "token");
-    email = await storage.read(key: "email");
+    // token = await storage.read(key: "token");
+    //email = await storage.read(key: "email");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = await prefs.getString("token");
+    email = await prefs.getString("email");
 
     BeneficiarieDocuments list = await HttpHelper()
         .getBeneficiarieDocuments(url, widget.id, token, 0, 0);
@@ -229,11 +233,36 @@ class DocumentsPageState extends State<DocumentsPage> {
       setState(() {
         this.toEnable = false;
       });
-      String filePath = await FilePicker.getFilePath(type: FileType.image);
+      /* String filePath = await FilePicker.getFilePath(type: FileType.image);
       print("---------->" + filePath);
       if (filePath == '') {
         return;
+      }*/
+
+      FilePickerResult result =
+          await FilePicker.platform.pickFiles(type: FileType.any);
+      String filePath;
+      if (result != null) {
+        filePath = result.files.single.path;
+
+// Find the ScaffoldMessenger in the widget tree
+// and use it to show a SnackBar.
+
+        print(filePath);
+      } else {
+        final snackBar = SnackBar(content: Text('-------------------->>>>>>>'));
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+// Find the ScaffoldMessenger in the widget tree
+// and use it to show a SnackBar.
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print(filePath);
+        print("-------------------->>>>>>>");
+        // return;
+        // User canceled the picker
       }
+
       setState(() {
         this._filePath = filePath;
         this.toEnable = true;

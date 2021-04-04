@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:eduempower/models/individual.dart' as individual_model;
 import 'package:http/http.dart' as http;
 import 'package:eduempower/models/response.dart';
-import 'package:eduempower/helpers/httphelper.dart';
 
 class Individual {
   Future<individual_model.Individual> getIndividual(

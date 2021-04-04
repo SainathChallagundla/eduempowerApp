@@ -4,16 +4,15 @@ import 'package:eduempower/beneficiaries/documents.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/dropdown.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:eduempower/drawer/individual.dart';
 import 'package:eduempower/drawer/organization.dart';
-
 import 'package:eduempower/helpers/httphelper.dart';
-
 import 'package:eduempower/models/beneficiarieDetails.dart'
     as beneficiarieDetails_model;
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'Package:eduempower/helpers/beneficiarieDetails.dart'
+    as beneficiarieDetails_helper;
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -32,20 +31,26 @@ class HomePageState extends State<HomePage> {
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIES;
 
-  final storage = new FlutterSecureStorage();
+  //final storage = new FlutterSecureStorage();
 
   void getInit() async {
-    token = await storage.read(key: "token");
-    email = await storage.read(key: "email");
-    name = await storage.read(key: "name");
-    userType = await storage.read(key: "userType");
-    // var list = await beneficiarieDetails_helper.BeneficiarieDetails()
-    //     .getBeneficiaries(url, token, 0, 0, "created");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+    email = prefs.getString("email");
+    name = prefs.getString("name");
+    userType = prefs.getString("userType");
 
-    // setState(() {
-    //   data = list;
-    // });
-    //var list =  await HttpHelper().getBeneficiaries(url, token, 0, 0);
+    //token = await storage.read(key: "token");
+    //email = await storage.read(key: "email");
+    //name = await storage.read(key: "name");
+    //userType = await storage.read(key: "userType");
+    var list = await beneficiarieDetails_helper.BeneficiarieDetails()
+        .getBeneficiaries(url, token, 0, 0);
+
+    setState(() {
+      data = list;
+    });
+    list = await HttpHelper().getBeneficiaries(url, token, 0, 0);
   }
 
   @override
@@ -61,6 +66,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         key: mainKey,
         appBar: AppBar(
             title: Text(widget.title,
@@ -260,8 +266,10 @@ class HomePageState extends State<HomePage> {
               // Update the state of the app
               // ...
               // Then close the drawer
-              final storage = new FlutterSecureStorage();
-              await storage.deleteAll();
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+              //final storage = new FlutterSecureStorage();
+              //await storage.deleteAll();
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => UserLogin()));
@@ -273,8 +281,10 @@ class HomePageState extends State<HomePage> {
               // Update the state of the app
               // ...
               // Then close the drawer
-              final storage = new FlutterSecureStorage();
-              await storage.deleteAll();
+              //final storage = new FlutterSecureStorage();
+              //await storage.deleteAll();
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => UserLogin()));

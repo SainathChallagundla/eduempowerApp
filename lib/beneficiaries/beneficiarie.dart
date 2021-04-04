@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:eduempower/helpers/beneficiarieDetails.dart'
+    as beneficiarieDetails_helper;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BeneficiariePage extends StatefulWidget {
   BeneficiariePage({Key key}) : super(key: key);
@@ -27,9 +29,11 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   //Map dataList = Map();
   List<TemplateDataFields> dataList = List<TemplateDataFields>();
   void getInit() async {
-    token = await storage.read(key: "token");
-    email = await storage.read(key: "email");
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //token = await storage.read(key: "token");
+    token = await prefs.getString("token");
+    //email = await storage.read(key: "email");
+    email = await prefs.getString("email");
     var list = await HttpHelper().getTemplateNames(url, token);
 
     setState(() {
@@ -227,7 +231,6 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
     // Give status here
     beneficiarieDetails.statusForFunding = "created";
 
-    var beneficiarieDetails_helper; ///////////////////////////////////////////////////////////////////////////////
     var result = await beneficiarieDetails_helper.BeneficiarieDetails()
         .addBenificiarieDetails(
             HttpEndPoints.BASE_URL + HttpEndPoints.ADD_BENEFICIARY_DETAILS,

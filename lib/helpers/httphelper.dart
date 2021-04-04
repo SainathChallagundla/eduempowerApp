@@ -10,12 +10,16 @@ import 'package:http/http.dart' as http;
 
 class HttpHelper {
   Future<GeneralResponse> post(String url, {Map body}) async {
-    var response = await http.post(Uri.parse(url),
-        body: json.encode(body),
-        headers: {
-          "accept": "application/json",
-          "content-type": "application/json"
-        });
+    var response =
+        await http.post(Uri.parse(url), body: json.encode(body), headers: {
+      "Access-Control-Allow-Origin": "*",
+      // "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      "accept": "application/json",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "content-type": "application/json"
+    });
     if (response.statusCode == 200) {
       return GeneralResponse.fromJson(
           json.decode(response.body), response.statusCode);
@@ -28,6 +32,10 @@ class HttpHelper {
   Future<GeneralResponse> submit(String url, token, {Map body}) async {
     var response =
         await http.post(Uri.parse(url), body: json.encode(body), headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
       "accept": "application/json",
       "content-type": "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -45,6 +53,10 @@ class HttpHelper {
       String url, token, BeneficiarieDetails body) async {
     var response =
         await http.post(Uri.parse(url), body: json.encode(body), headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
       "accept": "application/json",
       "content-type": "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -57,6 +69,10 @@ class HttpHelper {
       String url, token, BeneficiarieDataFields body) async {
     var response =
         await http.put(Uri.parse(url), body: json.encode(body), headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
       "accept": "application/json",
       "content-type": "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -69,7 +85,11 @@ class HttpHelper {
       String url, token, Document body) async {
     var response =
         await http.put(Uri.parse(url), body: json.encode(body), headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
       "accept": "application/json",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
       "content-type": "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token',
     });
@@ -165,6 +185,7 @@ class HttpHelper {
   }
 }
 
+//192.168.0.106  ubuntu//109  ////MainSer   51.195.137.55
 class HttpEndPoints {
   static const String BASE_URL = "http://192.168.0.106:50051/";
 
@@ -172,7 +193,6 @@ class HttpEndPoints {
   static const String REGISTER = "v1/public/user/register";
   static const String RESETPASSWORD = "v1/public/user/resetPassword";
   static const String GET_USER = "v1/user/get/";
-
   static const String GET_INDIVIDUAL = "v1/user/individual/get/";
   static const String UPDATE_INDIVIDUAL = "v1/user/individual/updateBy/";
   static const String GET_ORGANIZATION = "v1/user/organization/get/";

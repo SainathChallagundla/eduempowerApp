@@ -4,6 +4,7 @@ import 'package:eduempower/models/individual.dart' as individual_model;
 import 'package:eduempower/helpers/individual.dart' as individual_helper;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IndividualPage extends StatefulWidget {
   // In the constructor, require a Todo.
@@ -37,8 +38,11 @@ class IndividualPageState extends State<IndividualPage> {
   final storage = new FlutterSecureStorage();
 
   void getInit() async {
-    token = await storage.read(key: "token");
-    email = await storage.read(key: "email");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = await prefs.getString("token");
+    email = await prefs.getString("email");
+    //token = await storage.read(key: "token");
+    //email = await storage.read(key: "email");
     var item =
         await individual_helper.Individual().getIndividual(url, email, token);
     setState(() {
@@ -64,7 +68,8 @@ class IndividualPageState extends State<IndividualPage> {
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      body: Padding(
+      body: 
+      Padding(
           padding: EdgeInsets.all(10.0), child: formIndividualBy(individual)),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

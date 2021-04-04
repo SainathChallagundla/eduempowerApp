@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLogin extends StatefulWidget {
   @override
@@ -299,16 +300,23 @@ class _UserLoginState extends State<UserLogin> {
           body: user.toMap());
 
       if (result.httpStatus == 200 && result.status == "success") {
-        await storage.write(key: "token", value: result.token);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("token", result.token);
+        // await storage.write(key: "token", value: result.token);
 
         var userFetch = await HttpHelper().fetchUser(emailEditingContrller.text,
             HttpEndPoints.BASE_URL + HttpEndPoints.GET_USER, result.token);
+        await prefs.setString("name", userFetch.name);
+        await prefs.setString("email", userFetch.email);
+        await prefs.setString("mobile", userFetch.mobile);
+        await prefs.setString("userCategory", userFetch.userCategory);
+        await prefs.setString("userType", userFetch.userType);
 
-        await storage.write(key: "name", value: userFetch.name);
-        await storage.write(key: "email", value: userFetch.email);
-        await storage.write(key: "mobile", value: userFetch.mobile);
-        await storage.write(key: "userCategory", value: userFetch.userCategory);
-        await storage.write(key: "userType", value: userFetch.userType);
+        //await storage.write(key: "name", value: userFetch.name);
+        // await storage.write(key: "email", value: userFetch.email);
+        // await storage.write(key: "mobile", value: userFetch.mobile);
+        //await storage.write(key: "userCategory", value: userFetch.userCategory);
+        // await storage.write(key: "userType", value: userFetch.userType);
 
         Navigator.push(
           context,
