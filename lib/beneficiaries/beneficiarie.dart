@@ -6,7 +6,6 @@ import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BeneficiariePage extends StatefulWidget {
@@ -23,7 +22,6 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   bool isLoaded = false;
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_TEMPLATE_NAMES;
-  final storage = new FlutterSecureStorage();
   final mainKey = GlobalKey<ScaffoldState>();
 
   //Map dataList = Map();
@@ -110,8 +108,9 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                         name = text;
                       },
                     ),
-                    SizedBox(height: 10),
-                    new Expanded(child: gridView(context, templateData)),
+                    new Expanded(
+                      child: gridView(context, templateData),
+                    )
                   ]))),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -122,31 +121,34 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
     );
   }
 
-  Widget rowVerify(BuildContext context, bool tobeVerified, int index) {
-    if (tobeVerified) {
-      return new Row(children: <Widget>[
-        FlatButton(
-          child: Text(
-            "Approve",
-            style: new TextStyle(
-              color: Colors.blue,
-            ),
-          ),
-          onPressed: () {},
-        ),
-        FlatButton(
-          child: Text(
-            "Reject",
-            style: new TextStyle(
-              color: Colors.blue,
-            ),
-          ),
-          onPressed: () {},
-        )
-      ]);
-    }
-    return Container(height: 0);
-  }
+  // Widget rowVerify(BuildContext context, bool tobeVerified, int index) {
+  //   if (tobeVerified) {
+  //     return new Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: <Widget>[
+  //           FlatButton(
+  //             child: Text(
+  //               "Approve",
+  //               style: new TextStyle(
+  //                 color: Colors.blue,
+  //               ),
+  //             ),
+  //             onPressed: () {},
+  //           ),
+  //           FlatButton(
+  //             child: Text(
+  //               "Reject",
+  //               style: new TextStyle(
+  //                 color: Colors.blue,
+  //               ),
+  //             ),
+  //             onPressed: () {},
+  //           )
+  //         ]);
+  //   }
+  //   return Container(height: 0);
+  // }
 
   Widget gridView(BuildContext context, BeneficiarieTemplate templateData) {
     if (dataList.isEmpty) {
@@ -169,12 +171,14 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
       }
     }
     return new GridView.builder(
+        scrollDirection: Axis.vertical,
         itemCount: templateData?.templateFields?.length ?? 0,
         shrinkWrap: true,
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1, childAspectRatio: 3.0),
         itemBuilder: (BuildContext context, int index) {
           return new GestureDetector(
+              child: SingleChildScrollView(
             child: new Container(
               alignment: Alignment.topLeft,
               margin: new EdgeInsets.all(1.0),
@@ -212,14 +216,15 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                       }
                     },
                   ),
-                  /* rowVerify(
-                      context,
-                      templateData
-                          .templateFields[index].verification.toBeVerified,index),*/
+                  // rowVerify(
+                  //     context,
+                  //     templateData
+                  //         .templateFields[index].verification.toBeVerified,
+                  //     index),
                 ],
               ), //new Text('Item $index'),
             ),
-          );
+          ));
         });
   }
 

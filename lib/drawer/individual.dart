@@ -60,6 +60,7 @@ class IndividualPageState extends State<IndividualPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: mainKey,
       appBar: AppBar(
           title: Text("User Profile",
@@ -68,8 +69,7 @@ class IndividualPageState extends State<IndividualPage> {
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      body: 
-      Padding(
+      body: Padding(
           padding: EdgeInsets.all(10.0), child: formIndividualBy(individual)),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

@@ -5,7 +5,7 @@ import 'package:expandable/expandable.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:eduempower/public/register.dart';
 import 'package:eduempower/models/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -197,6 +197,7 @@ class _UserLoginState extends State<UserLogin> {
           height: 10,
         ),
         ExpandablePanel(
+          collapsed: null,
           header: Text("Register as Donar"),
           expanded: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -291,7 +292,7 @@ class _UserLoginState extends State<UserLogin> {
         ));
       }
 
-      final storage = new FlutterSecureStorage();
+      //final storage = new FlutterSecureStorage();
       UserLogIn user = new UserLogIn(
           email: emailEditingContrller.text,
           password: passwordEditingContrller.text);
