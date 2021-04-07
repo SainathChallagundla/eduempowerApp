@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:eduempower/models/organization.dart' as organization_model;
 import 'package:eduempower/helpers/organization.dart' as organization_helper;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class OrganizationPage extends StatefulWidget {
   // In the constructor, require a Todo.
@@ -35,7 +35,7 @@ class OrganizationPageState extends State<OrganizationPage> {
   final mainKey = GlobalKey<ScaffoldState>();
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_ORGANIZATION;
-  final storage = new FlutterSecureStorage();
+  //final storage = new FlutterSecureStorage();
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

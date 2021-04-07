@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 //import 'package:url_launcher/url_launcher.dart';
 import 'MyWebView.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-//import 'dart:io';
+import 'dart:io';
 
 class MyStatefulWidget extends StatefulWidget {
   MyStatefulWidget({Key key}) : super(key: key);
@@ -16,7 +16,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String dropdownValue = 'One';
   String token;
-  final storage = new FlutterSecureStorage();
+  final os = Platform.operatingSystem;
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,6 +28,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    print(os);
     this.getInit();
   }
 
@@ -42,7 +44,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               builder: (BuildContext context) => MyWebView(
                     title: "Documents",
                     selectedUrl:
-                        "http://192.168.0.106:50051/v1/public/user/getFile/5e2b22ba9f6e45bb9ef3c40e",
+                        "http://localhost:50051/v1/public/user/getFile/5e2b22ba9f6e45bb9ef3c40e",
                   )));
         },
       ),

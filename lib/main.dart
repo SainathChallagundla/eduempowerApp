@@ -5,6 +5,8 @@ import 'package:eduempower/home.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //void main() => runApp(MyApp());
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
