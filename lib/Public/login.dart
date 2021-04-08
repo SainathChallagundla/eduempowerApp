@@ -126,6 +126,7 @@ class _UserLoginState extends State<UserLogin> {
           height: 10,
         ),
         ExpandablePanel(
+          collapsed: null,
           header: Text("Register as Contributor"),
           expanded: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -310,6 +311,7 @@ class _UserLoginState extends State<UserLogin> {
         await prefs.setString("name", userFetch.name);
         await prefs.setString("email", userFetch.email);
         await prefs.setString("mobile", userFetch.mobile);
+        print(userFetch.userCategory);
         await prefs.setString("userCategory", userFetch.userCategory);
         await prefs.setString("userType", userFetch.userType);
 

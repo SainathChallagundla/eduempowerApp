@@ -2,6 +2,7 @@ import 'package:eduempower/public/login.dart';
 import 'package:eduempower/beneficiaries/beneficiarie.dart';
 import 'package:eduempower/beneficiaries/documents.dart';
 import 'package:eduempower/beneficiaries/editBeneficiarie.dart';
+import 'package:eduempower/beneficiaries/viewBeneficiarie.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/dropdown.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,7 @@ import 'package:eduempower/helpers/beneficiarieDetails.dart'
 
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eduempower/funds/donarfunds.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -27,7 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  String token, email, name, userType;
+  String token, email, name, userType, userCategory;
   bool reload = false;
   final mainKey = GlobalKey<ScaffoldState>();
 
@@ -47,6 +49,7 @@ class HomePageState extends State<HomePage> {
     email = prefs.getString("email");
     name = prefs.getString("name");
     userType = prefs.getString("userType");
+    userCategory = prefs.getString("userCategory");
     var list = await beneficiarieDetails_helper.BeneficiarieDetails()
         .getBeneficiaries(url, token, 0, 0, "created");
 
@@ -80,17 +83,30 @@ class HomePageState extends State<HomePage> {
         body: buildListView(data),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.person_add),
+          child: userCategory == "donar"
+              //? const Icon(Icons.money)
+              ? const Text(
+                  "\u{20B9}",
+                  style: TextStyle(fontSize: 40),
+                )
+              : const Icon(Icons.person_add),
           onPressed: () async {
-            bool result = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BeneficiariePage()),
-            );
-            setState(() {
-              this.reload = result;
-            });
-            if (result == true) {
-              this.getInit();
+            if (userCategory == "donar") {
+              bool result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DonarFundsPage()),
+              );
+            } else {
+              bool result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BeneficiariePage()),
+              );
+              setState(() {
+                this.reload = result;
+              });
+              if (result == true) {
+                this.getInit();
+              }
             }
           },
         ),
@@ -304,43 +320,60 @@ class HomePageState extends State<HomePage> {
         itemCount: data?.length ?? 0,
         itemBuilder: (context, index) {
           return ListTile(
-            // title: Text(data != null ? data[index].name : ""),
-            title: Text(data[index].name ?? ""),
-            leading: IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () async {
-                bool result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditBeneficiariePage(
-                          id: data != null ? data[index].id : "")),
-                );
-                setState(() {
-                  this.reload = result ?? false;
-                });
-                if (result ?? false) {
-                  this.getInit();
-                }
-              },
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.details),
-              onPressed: () async {
-                bool result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DocumentsPage(
-                          id: data != null ? data[index].id : "")),
-                );
-                setState(() {
-                  this.reload = result;
-                });
-                if (result == true) {
-                  this.getInit();
-                }
-              },
-            ),
-          );
+              // title: Text(data != null ? data[index].name : ""),
+              title: Text(data[index].name ?? ""),
+              leading: IconButton(
+                icon: Icon(Icons.edit_outlined),
+                onPressed: () async {
+                  bool result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditBeneficiariePage(
+                            id: data != null ? data[index].id : "")),
+                  );
+                  setState(() {
+                    this.reload = result ?? false;
+                  });
+                  if (result ?? false) {
+                    this.getInit();
+                  }
+                },
+              ),
+              trailing: Wrap(spacing: 12, children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.file_present),
+                  onPressed: () async {
+                    bool result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DocumentsPage(
+                              id: data != null ? data[index].id : "")),
+                    );
+                    setState(() {
+                      this.reload = result;
+                    });
+                    if (result == true) {
+                      this.getInit();
+                    }
+                  },
+                ),
+                IconButton(
+                    onPressed: () async {
+                      bool result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewBeneficiariePage(
+                                id: data != null ? data[index].id : "")),
+                      );
+                      setState(() {
+                        this.reload = result;
+                      });
+                      if (result == true) {
+                        this.getInit();
+                      }
+                    },
+                    icon: Icon(Icons.view_list_outlined))
+              ]));
         },
       );
     } else {

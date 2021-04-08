@@ -9,6 +9,7 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:flutter/cupertino.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditBeneficiariePage extends StatefulWidget {
   final String id;
@@ -91,9 +92,9 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
                       },
                     ),
 
-                    //  SizedBox(height: 10),
+                    SizedBox(height: 20),
                     new Expanded(child: gridView(context, benediciarieData)),
-                    //SizedBox(height: 10),
+                    SizedBox(height: 20),
                     // To do here ..
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,7 +216,7 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
           itemCount: beneficiarieDetails?.data?.length ?? 0,
           shrinkWrap: true,
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1, childAspectRatio: 3.0),
+              crossAxisCount: 1, childAspectRatio: kIsWeb ? 10.0 : 3.0),
           itemBuilder: (BuildContext context, int index) {
             return new GestureDetector(
               child: new Container(

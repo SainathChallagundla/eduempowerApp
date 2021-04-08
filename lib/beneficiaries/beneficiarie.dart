@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class BeneficiariePage extends StatefulWidget {
   BeneficiariePage({Key key}) : super(key: key);
@@ -28,9 +29,7 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   List<TemplateDataFields> dataList = List<TemplateDataFields>();
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //token = await storage.read(key: "token");
     token = await prefs.getString("token");
-    //email = await storage.read(key: "email");
     email = await prefs.getString("email");
     var list = await HttpHelper().getTemplateNames(url, token);
 
@@ -108,6 +107,9 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                         name = text;
                       },
                     ),
+                    SizedBox(
+                      height: 25,
+                    ),
                     new Expanded(
                       child: gridView(context, templateData),
                     )
@@ -175,7 +177,7 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
         itemCount: templateData?.templateFields?.length ?? 0,
         shrinkWrap: true,
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1, childAspectRatio: 3.0),
+            crossAxisCount: 1, childAspectRatio: kIsWeb ? 14.0 : 3.0),
         itemBuilder: (BuildContext context, int index) {
           return new GestureDetector(
               child: SingleChildScrollView(
@@ -248,3 +250,5 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
     }
   }
 }
+
+class KIsweb {}
