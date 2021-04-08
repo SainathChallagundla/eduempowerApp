@@ -35,7 +35,7 @@ class IndividualPageState extends State<IndividualPage> {
   final mainKey = GlobalKey<ScaffoldState>();
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_INDIVIDUAL;
-  final storage = new FlutterSecureStorage();
+  //final storage = new FlutterSecureStorage();
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -4,9 +4,9 @@ class BeneficiarieDetails {
   final String id;
   final String name;
   final String templateName;
-   List<TemplateDataFields> data;
-   List<Document> documents;
-   String statusForFunding;
+  List<TemplateDataFields> data;
+  List<Document> documents;
+  String statusForFunding;
   final String status;
   final String lastUpdated;
   final String user;
@@ -23,12 +23,12 @@ class BeneficiarieDetails {
       this.user});
 
   factory BeneficiarieDetails.fromJson(Map<String, dynamic> json) {
-
     var list = json['data'] as List;
 
     var docs = json['documents'] as List;
-  
-    List<TemplateDataFields> templateDataFieldsList = list.map((i) => TemplateDataFields.fromJson(i)).toList();
+
+    List<TemplateDataFields> templateDataFieldsList =
+        list.map((i) => TemplateDataFields.fromJson(i)).toList();
     List<Document> documents = docs.map((i) => Document.fromJson(i)).toList();
 
     return BeneficiarieDetails(
@@ -36,8 +36,8 @@ class BeneficiarieDetails {
       name: json['name'],
       templateName: json['templateName'],
       data: templateDataFieldsList,
-      documents:documents,
-      statusForFunding:json['statusForFunding'],
+      documents: documents,
+      statusForFunding: json['statusForFunding'],
       status: json['status'],
       lastUpdated: json['lastUpdated'],
       user: json['user'],
@@ -49,8 +49,8 @@ class BeneficiarieDetails {
     map["name"] = name;
     map["templateName"] = templateName;
     map["templateDataFields"] = data;
-    map['documents']=documents;
-    map['statusForFunding']=statusForFunding;
+    map['documents'] = documents;
+    map['statusForFunding'] = statusForFunding;
     map["status"] = status;
     map["lastUpdated"] = lastUpdated;
     map['user'] = user;
@@ -61,23 +61,23 @@ class BeneficiarieDetails {
         "id": id,
         "name": name,
         "templateName": templateName,
-        "data":data,
-        "documents":documents,
-        "statusForFunding":statusForFunding,
-        "status":status,
-        "lastUpdated":lastUpdated,
-        "user":user
-    };
+        "data": data,
+        "documents": documents,
+        "statusForFunding": statusForFunding,
+        "status": status,
+        "lastUpdated": lastUpdated,
+        "user": user
+      };
 }
 
 class TemplateDataFields {
-   String name;
-   String header;
-   String value;
-   String type;
-   bool required;
-   String regex;
-   Verification verification;
+  String name;
+  String header;
+  String value;
+  String type;
+  bool required;
+  String regex;
+  Verification verification;
   TemplateDataFields(
       {this.name,
       this.header,
@@ -85,8 +85,7 @@ class TemplateDataFields {
       this.type,
       this.required,
       this.regex,
-      this.verification
-    });
+      this.verification});
 
   factory TemplateDataFields.fromJson(Map<String, dynamic> json) {
     return TemplateDataFields(
@@ -99,15 +98,15 @@ class TemplateDataFields {
       verification: Verification.fromJson(json['verification']),
     );
   }
- Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "name": name,
         "header": header,
         "value": value,
-        "type":type,
-        "required":required,
-        "regex":regex,
-        "verification":verification,
-    };
+        "type": type,
+        "required": required,
+        "regex": regex,
+        "verification": verification,
+      };
   Map toMap() {
     var map = new Map<String, dynamic>();
     map["name"] = name;
