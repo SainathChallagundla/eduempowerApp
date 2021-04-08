@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'MyWebView.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -15,10 +16,12 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String dropdownValue = 'One';
   String token;
-  final storage = new FlutterSecureStorage();
+  //final storage = new FlutterSecureStorage();
 
   void getInit() async {
-    token = await storage.read(key: "token");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //token = await storage.read(key: "token");
+    token = await prefs.getString("token");
     print(token);
   }
 
@@ -53,7 +56,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   title: Text("Launch Web Page"),
   onTap: () async {
     const url = 'http://localhost:50051/v1/public/user/getFile/5e2b22ba9f6e45bb9ef3c40e';
-
     if (await canLaunch(url)) {
       print("----->"+token);
       await launch(url,enableDomStorage: true, universalLinksOnly:true,forceSafariVC: true, headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});

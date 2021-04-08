@@ -107,10 +107,11 @@ class HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
+            icon: Icon(Icons.home),
             // iconSize: 50,
-            icon: Image.asset(
-              'assets/images/Beneficiaries.png',
-            ),
+            // icon: Image.asset(
+            // 'assets/images/Beneficiaries.png',
+            //),
             onPressed: () {},
           ),
           /* GestureDetector(
@@ -224,9 +225,13 @@ class HomePageState extends State<HomePage> {
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.pop(context);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyStatefulWidget()));
+              // Navigator.pop(context);
+              // Navigator.of(context).push(MaterialPageRoute(
+              //  builder: (BuildContext context) => MyStatefulWidget()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => _emptyContainer()));
             },
           ),
           ListTile(
@@ -235,9 +240,13 @@ class HomePageState extends State<HomePage> {
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.pop(context);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyStatefulWidget()));
+              // Navigator.pop(context);
+              // Navigator.of(context).push(MaterialPageRoute(
+              // builder: (BuildContext context) => MyStatefulWidget()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => _emptyContainer()));
             },
           ),
           ListTile(
@@ -246,9 +255,13 @@ class HomePageState extends State<HomePage> {
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.pop(context);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyStatefulWidget()));
+              // Navigator.pop(context);
+              //Navigator.of(context).push(MaterialPageRoute(
+              // builder: (BuildContext context) => MyStatefulWidget()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => _emptyContainer()));
             },
           ),
           ListTile(
@@ -257,9 +270,13 @@ class HomePageState extends State<HomePage> {
               // Update the state of the appR
               // ...
               // Then close the drawer
-              Navigator.pop(context);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyStatefulWidget()));
+              // Navigator.pop(context);
+              // Navigator.of(context).push(MaterialPageRoute(
+              // builder: (BuildContext context) => MyStatefulWidget()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => _emptyContainer()));
             },
           ),
           ListTile(
@@ -346,5 +363,19 @@ class HomePageState extends State<HomePage> {
     } else {
       return ListView();
     }
+  }
+
+  Widget _emptyContainer() {
+    return Scaffold(
+        appBar: AppBar(),
+        body: Center(
+            child: Container(
+                child: Center(
+                    child: Container(
+          child: Text(
+            ' Hello',
+            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
+          ),
+        )))));
   }
 }

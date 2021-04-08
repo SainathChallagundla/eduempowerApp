@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class BeneficiariePage extends StatefulWidget {
   BeneficiariePage({Key key}) : super(key: key);
@@ -108,6 +109,9 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                         name = text;
                       },
                     ),
+                    SizedBox(
+                      height: 25,
+                    ),
                     new Expanded(
                       child: gridView(context, templateData),
                     )
@@ -175,7 +179,7 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
         itemCount: templateData?.templateFields?.length ?? 0,
         shrinkWrap: true,
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1, childAspectRatio: 3.0),
+            crossAxisCount: 1, childAspectRatio: kIsWeb ? 14.0 : 3.0),
         itemBuilder: (BuildContext context, int index) {
           return new GestureDetector(
               child: SingleChildScrollView(
