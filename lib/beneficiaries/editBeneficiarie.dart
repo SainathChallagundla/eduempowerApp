@@ -32,8 +32,8 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = await prefs.getString("token");
-    email = await prefs.getString("email");
+    token = prefs.getString("token");
+    email = prefs.getString("email");
 
     // token = await storage.read(key: "token");
     // email = await storage.read(key: "email");
