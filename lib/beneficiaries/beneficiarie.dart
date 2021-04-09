@@ -29,8 +29,8 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   List<TemplateDataFields> dataList = List<TemplateDataFields>();
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = await prefs.getString("token");
-    email = await prefs.getString("email");
+    token = prefs.getString("token");
+    email = prefs.getString("email");
     var list = await HttpHelper().getTemplateNames(url, token);
 
     setState(() {
@@ -250,5 +250,3 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
     }
   }
 }
-
-class KIsweb {}

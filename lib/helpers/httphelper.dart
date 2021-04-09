@@ -204,4 +204,6 @@ class HttpEndPoints {
       "v1/user/beneficiarie/details/document/add/";
 
   static const String GET_FILE = "v1/public/user/getFile/";
+
+  static const String ADD_FUND = "v1/fund/add";
 }

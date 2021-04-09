@@ -1,4 +1,4 @@
-import 'package:eduempower/models/beneficiarieDetails.dart';
+import 'package:eduempower/models/funds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eduempower/helpers/httphelper.dart';
@@ -17,31 +17,22 @@ class DonarFundsPage extends StatefulWidget {
 }
 
 class _DonarFundsPageState extends State<DonarFundsPage> {
-  String _mySelection, token, email, name;
+  String referenceNo, moreInfo, token, email, paymentMode;
+  double proposedAmount;
   List data = List(); //edited line
   BeneficiarieTemplate templateData;
   bool isLoaded = false;
-
-  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_TEMPLATE_NAMES;
   final mainKey = GlobalKey<ScaffoldState>();
-
-  //Map dataList = Map();
-  //List<TemplateDataFields> dataList = List<TemplateDataFields>();
-  // void getInit() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   token = await prefs.getString("token");
-  //   email = await prefs.getString("email");
-  //   var list = await HttpHelper().getTemplateNames(url, token);
-
-  //   setState(() {
-  //     data = list;
-  //   });
-  // }
+  void getInit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+    email = prefs.getString("email");
+  }
 
   @override
   void initState() {
     super.initState();
-    //this.getInit();
+    this.getInit();
   }
 
   @override
@@ -76,9 +67,10 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
                           borderSide:
                               BorderSide(color: Colors.blue, width: 1.0),
                         ),
-                        hintText: 'Enter Amount'),
+                        hintText: 'Enter Proposed Amount'),
                     onChanged: (text) {
-                      name = text;
+                      print("Enter Proposed Amount-------------$text");
+                      proposedAmount = double.parse(text);
                     },
                   ),
                   SizedBox(height: 20),
@@ -94,7 +86,7 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
                         ),
                         hintText: 'Mode Of Payment'),
                     onChanged: (text) {
-                      name = text;
+                      paymentMode = text;
                     },
                   ),
                   SizedBox(height: 20),
@@ -110,7 +102,7 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
                         ),
                         hintText: 'Referance No.'),
                     onChanged: (text) {
-                      name = text;
+                      referenceNo = text;
                     },
                   ),
                   SizedBox(height: 20),
@@ -127,7 +119,7 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
                         ),
                         hintText: 'More Info'),
                     onChanged: (text) {
-                      name = text;
+                      moreInfo = text;
                     },
                   ),
                   SizedBox(height: 20),
@@ -148,7 +140,7 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
                         ),
                       ])),
                   Text(
-                    "\u{20B9}",
+                    "Attach Document/Image",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   )
                 ],
@@ -156,25 +148,23 @@ class _DonarFundsPageState extends State<DonarFundsPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.save),
-          onPressed: () {
-            onSubmit(context);
+          onPressed: () async {
+            await onSubmit(context);
           }),
     );
   }
 
-  void onSubmit(BuildContext context) async {
-    BeneficiarieDetails beneficiarieDetails = new BeneficiarieDetails(
-        name: name, templateName: templateData.templateName, user: email);
-    beneficiarieDetails.data = List<TemplateDataFields>();
-    //beneficiarieDetails.data.addAll(dataList);
-    // Give status here
-    beneficiarieDetails.statusForFunding = "created";
+  Future<void> onSubmit(BuildContext context) async {
+    Fund fundsPage = new Fund(
+        amountProposed: proposedAmount,
+        modeOfPayment: paymentMode,
+        referenceNo: referenceNo,
+        moreInfo: moreInfo,
+        donorEmail: email);
 
-    var result = await beneficiarieDetails_helper.BeneficiarieDetails()
-        .addBenificiarieDetails(
-            HttpEndPoints.BASE_URL + HttpEndPoints.ADD_BENEFICIARY_DETAILS,
-            token,
-            beneficiarieDetails);
+    print(proposedAmount);
+    var result = await beneficiarieDetails_helper.BeneficiarieDetails().addFund(
+        HttpEndPoints.BASE_URL + HttpEndPoints.ADD_FUND, token, fundsPage);
     if (result.status == "success") {
       Navigator.pop(context, true);
     } else {

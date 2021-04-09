@@ -22,29 +22,25 @@ class DocumentsPage extends StatefulWidget {
 class DocumentsPageState extends State<DocumentsPage> {
   String documentTypeSelection, token, email, name;
   String _filePath;
+
   bool toEnable = false;
 
   bool reload = false;
 
   BeneficiarieDocuments data = BeneficiarieDocuments(); //edited line
+
   List dropdownData = List();
 
   final String url =
       HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIE_DOCUMENTS;
-
-  // final storage = new FlutterSecureStorage();
-
   final txtDescController = TextEditingController();
 
   final globalKey = GlobalKey<ScaffoldState>();
 
   void getInit() async {
-    // token = await storage.read(key: "token");
-    //email = await storage.read(key: "email");
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = await prefs.getString("token");
-    email = await prefs.getString("email");
+    token = prefs.getString("token");
+    email = prefs.getString("email");
 
     BeneficiarieDocuments list = await HttpHelper()
         .getBeneficiarieDocuments(url, widget.id, token, 0, 0);
