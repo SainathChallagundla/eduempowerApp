@@ -108,16 +108,6 @@ class HomePageState extends State<HomePage> {
         drawer: _drawer(context));
   }
 
-  Widget _flaticon() {
-    if (userCategory == "contributor") {
-      return const Icon(Icons.person_add);
-    } else
-      return const Text(
-        "\u{20B9}",
-        style: TextStyle(fontSize: 40),
-      );
-  }
-
   Widget _bottonNavBar(BuildContext context) {
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
