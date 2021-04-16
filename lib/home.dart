@@ -38,12 +38,7 @@ class HomePageState extends State<HomePage> {
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIES;
 
-  // final storage = new FlutterSecureStorage();
   void getInit() async {
-    //   token = await storage.read(key: "token");
-    //   email = await storage.read(key: "email");
-    //   name = await storage.read(key: "name");
-    //   userType = await storage.read(key: "userType");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     email = prefs.getString("email");
@@ -83,13 +78,12 @@ class HomePageState extends State<HomePage> {
         body: buildListView(data),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
-          child: userCategory == "donar"
-              //? const Icon(Icons.money)
-              ? const Text(
+          child: userCategory == "contributor"
+              ? const Icon(Icons.person_add)
+              : const Text(
                   "\u{20B9}",
                   style: TextStyle(fontSize: 40),
-                )
-              : const Icon(Icons.person_add),
+                ),
           onPressed: () async {
             if (userCategory == "donar") {
               bool result = await Navigator.push(
@@ -112,6 +106,16 @@ class HomePageState extends State<HomePage> {
         ),
         bottomNavigationBar: _bottonNavBar(context),
         drawer: _drawer(context));
+  }
+
+  Widget _flaticon() {
+    if (userCategory == "contributor") {
+      return const Icon(Icons.person_add);
+    } else
+      return const Text(
+        "\u{20B9}",
+        style: TextStyle(fontSize: 40),
+      );
   }
 
   Widget _bottonNavBar(BuildContext context) {
