@@ -6,25 +6,21 @@ import 'package:eduempower/beneficiaries/viewBeneficiarie.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/dropdown.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:eduempower/drawer/individual.dart';
 import 'package:eduempower/drawer/organization.dart';
-
 import 'package:eduempower/helpers/httphelper.dart';
-
 import 'package:eduempower/models/beneficiarieDetails.dart'
     as beneficiarieDetails_model;
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
-
-//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:eduempower/funds/donarfunds.dart';
+import 'package:eduempower/funds/addfunds.dart';
+import 'package:eduempower/funds/viewfunds.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
   @override
-  createState() => HomePageState();
+  HomePageState createState() => HomePageState();
   HomePage({Key key, this.title}) : super(key: key);
 }
 
@@ -104,11 +100,11 @@ class HomePageState extends State<HomePage> {
             }
           },
         ),
-        bottomNavigationBar: _bottonNavBar(context),
+        bottomNavigationBar: _bottonNavBar(context, 0),
         drawer: _drawer(context));
   }
 
-  Widget _bottonNavBar(BuildContext context) {
+  Widget _bottonNavBar(BuildContext context, int index) {
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
       notchMargin: 4.0,
@@ -117,7 +113,7 @@ class HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
-            // iconSize: 50,
+            iconSize: 50,
             icon: Image.asset(
               'assets/images/Beneficiaries.png',
             ),
@@ -140,7 +136,20 @@ class HomePageState extends State<HomePage> {
           ),*/
           IconButton(
             icon: Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () async {
+              bool result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewFundsPage()),
+              );
+              setState(() {
+                this.reload = result;
+              });
+              if (result == true) {
+                this.getInit();
+              }
+              icon:
+              Icon(Icons.view_list_outlined);
+            },
           ),
           IconButton(
             icon: Icon(Icons.search),

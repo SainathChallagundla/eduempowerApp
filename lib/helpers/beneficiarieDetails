@@ -1,0 +1,43 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:eduempower/models/beneficiarieDetails.dart'
+    as beneficiarie_model;
+import 'package:http/http.dart' as http;
+import 'package:eduempower/models/response.dart';
+import 'package:eduempower/helpers/httphelper.dart';
+
+class BeneficiarieDetails {
+  Future<GeneralResponse> addBenificiarieDetails(
+      String url, token, beneficiarie_model.BeneficiarieDetails body) async {
+    var response =
+        await http.post(Uri.parse(url), body: json.encode(body), headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
+    return GeneralResponse.fromJson(
+        json.decode(response.body), response.statusCode);
+  }
+
+  Future<List<beneficiarie_model.BeneficiarieDetails>> getBeneficiaries(
+      String url, String token, int skip, int limit) async {
+    final response = await http.get(
+        Uri.parse(url + "/" + skip.toString() + "/" + limit.toString()),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      Iterable l = json.decode(response.body);
+      if (l != null) {
+        List<beneficiarie_model.BeneficiarieDetails> list = l
+            .map((model) =>
+                beneficiarie_model.BeneficiarieDetails.fromJson(model))
+            .toList();
+        return list;
+      } else {
+        return null;
+      }
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load the data');
+    }
+  }
+}
