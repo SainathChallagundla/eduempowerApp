@@ -1,4 +1,3 @@
-
 class Individual {
   final String id;
   final UserDetails user;
@@ -11,21 +10,20 @@ class Individual {
   final String pinCode;
   final String socialMedia;
   final String status;
- 
 
-  Individual(
-      {this.id,
-      this.user,
-      this.occupation,
-      this.moreInfo,
-      this.address,
-      this.city,
-      this.state,
-      this.country,
-      this.pinCode,
-      this.socialMedia,
-      this.status,
-     });
+  Individual({
+    this.id,
+    this.user,
+    this.occupation,
+    this.moreInfo,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.pinCode,
+    this.socialMedia,
+    this.status,
+  });
 
   factory Individual.fromJson(Map<String, dynamic> json) {
     if (json == null) {
@@ -43,7 +41,6 @@ class Individual {
       pinCode: json['pinCode'],
       socialMedia: json['socialMedia'],
       status: json['status'],
-  
     );
   }
 
@@ -60,7 +57,7 @@ class Individual {
     map["pinCode"] = pinCode;
     map["socialMedia"] = socialMedia;
     map["status"] = status;
-   
+
     return map;
   }
 
@@ -76,7 +73,6 @@ class Individual {
         "pinCode": pinCode,
         "socialMedia": socialMedia,
         "status": status,
-       
       };
 }
 

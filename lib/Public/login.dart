@@ -324,8 +324,11 @@ class _UserLoginState extends State<UserLogin> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(title: "Beneficiaries"),
-          ),
+              builder: (context) => HomePage(
+                    title: "Edu EmPower",
+                  )
+              // BeneficiariesPage(title: "Beneficiaries"),
+              ),
         );
       } else {
         var snackbar = SnackBar(

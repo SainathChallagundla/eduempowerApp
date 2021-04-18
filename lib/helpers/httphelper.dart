@@ -167,7 +167,7 @@ class HttpHelper {
 
 //192.168.0.106  ubuntu//109  ////MainServer   51.195.137.55
 class HttpEndPoints {
-  static const String BASE_URL = "http://192.168.0.105:50051/";
+  static const String BASE_URL = "http://10.0.2.2:50051/";
 
   static const String SIGN_IN = "v1/public/user/mobile/signin";
   static const String REGISTER = "v1/public/user/register";
@@ -206,4 +206,6 @@ class HttpEndPoints {
   static const String GET_FILE = "v1/public/user/getFile/";
 
   static const String ADD_FUND = "v1/fund/add";
+
+  static const String GET_FUNDS = "v1/fund/getFunds";
 }
