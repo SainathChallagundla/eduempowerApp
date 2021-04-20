@@ -1,8 +1,6 @@
 import 'package:eduempower/models/beneficiarieDetails.dart';
 import 'package:eduempower/models/beneficiarieDataFields.dart'
     as beneficiarieDataFields_model;
-import 'package:eduempower/helpers/beneficiarieDetails.dart'
-    as beneficiarieDetails_helper;
 import 'package:flutter/material.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,73 +88,8 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
                     SizedBox(height: 20),
                     new Expanded(child: gridView(context, benediciarieData)),
                   ]))),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      //floatingActionButton: FloatingActionButton(
-      //  child: const Icon(Icons.update),
-      //onPressed: () {
-      //onSubmit(context);
-      //}),
     );
   }
-
-  // Widget rowVerify(BuildContext context, bool tobeVerified, int index,
-  //     BeneficiarieDetails beneficiarieDetails) {
-  //   if (tobeVerified) {
-  //     /*print(getVerificationText(
-  //             beneficiarieDetails?.data[index]?.verification?.status ?? "") ??
-  //         "Approve");*/
-  //     return Expanded(
-  //         child: new Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: <Widget>[
-  //           FlatButton(
-  //             child: Text(
-  //               getVerificationText(beneficiarieDetails
-  //                           ?.data[index]?.verification?.status ??
-  //                       "") ??
-  //                   "Approve",
-  //               style: new TextStyle(
-  //                 color: getVerificationText(beneficiarieDetails
-  //                                 ?.data[index]?.verification?.status ??
-  //                             "") ==
-  //                         "Approved"
-  //                     ? Colors.green
-  //                     : Colors.blue,
-  //               ),
-  //             ),
-  //             onPressed: () {
-  //               if (beneficiarieDetails != null &&
-  //                   beneficiarieDetails.data.isNotEmpty) {
-  //                 var item = beneficiarieDetails.data[index];
-  //                 item.verification.status = "approved";
-  //                 item.verification.verifiedBy = email;
-  //                 beneficiarieDetails.data.removeAt(index);
-  //                 beneficiarieDetails.data.insert(index, item);
-  //               }
-  //             },
-  //           ),
-  //           FlatButton(
-  //             child: Text(
-  //               "Reject",
-  //               style: new TextStyle(
-  //                 color: Colors.blue,
-  //               ),
-  //             ),
-  //             onPressed: () {
-  //               if (beneficiarieDetails != null &&
-  //                   beneficiarieDetails.data.isNotEmpty) {
-  //                 var item = beneficiarieDetails.data[index];
-  //                 item.verification.status = "rejected";
-  //                 item.verification.verifiedBy = email;
-  //                 beneficiarieDetails.data.removeAt(index);
-  //                 beneficiarieDetails.data.insert(index, item);
-  //               }
-  //             },
-  //           )
-  //         ]));
-  //   }
-  //   return Container(height: 0);
-  // }
 
   Widget gridView(
       BuildContext context, BeneficiarieDetails beneficiarieDetails) {
@@ -188,13 +121,6 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
                     TextFormField(
                       initialValue: beneficiarieDetails.data[index].value,
                       readOnly: true,
-                      //key: Key("${beneficiarieDetails.data[index]..name}"),
-                      //keyboardType: TextInputType.multiline,
-                      // inputFormatters: [
-                      //   WhitelistingTextInputFormatter(
-                      //       RegExp(beneficiarieDetails.data[index].regex))
-                      // ],
-                      //maxLines: 2,
                       decoration: new InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide:
@@ -204,30 +130,10 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
                           borderSide:
                               BorderSide(color: Colors.blue, width: 1.0),
                         ),
-                        //labelText: beneficiarieDetails.data[index].value,
                       ),
-                      // onChanged: (text) {
-                      //   if (beneficiarieDetails != null &&
-                      //       beneficiarieDetails.data.isNotEmpty) {
-                      //     var item = beneficiarieDetails.data.where((m) {
-                      //       return m.name ==
-                      //           beneficiarieDetails.data[index].name;
-                      //     }).single;
-                      //     item.value = text;
-                      //     beneficiarieDetails.data.removeAt(index);
-                      //     beneficiarieDetails.data.insert(index, item);
-                      //     // beneficiarieDetails.data.replaceRange(index, index, [item]);
-                      //   }
-                      // },
                     ),
-                    // rowVerify(
-                    //     context,
-                    //     beneficiarieDetails
-                    //         .data[index].verification.toBeVerified,
-                    //     index,
-                    //     beneficiarieDetails),
                   ],
-                ), //new Text('Item $index'),
+                ),
               ),
             );
           });
@@ -238,73 +144,4 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
       );
     }
   }
-
-  void onSubmit(BuildContext context) async {
-    benediciarieData.data.forEach((item) {
-      if (dataFields != null && dataFields.data == null) {
-        dataFields.data = List<TemplateDataFields>();
-      }
-      dataFields.data.add(item);
-    });
-    var result = await beneficiarieDetails_helper.BeneficiarieDetails()
-        .updateBenificiarieFileds(
-            HttpEndPoints.BASE_URL +
-                HttpEndPoints.UPDATE_BENEFICIARIE_FIELDS +
-                widget.id,
-            token,
-            dataFields);
-
-    if (result.status == "success") {
-      Navigator.pop(context, true);
-    } else {
-      Navigator.pop(context, false);
-    }
-  }
-
-  // void onSubSubmit(BuildContext context, Map<String, dynamic> fields) async {
-  //   var result = await beneficiarieDetails_helper.BeneficiarieDetails()
-  //       .updateBenificiarieDetailsById(
-  //           HttpEndPoints.BASE_URL +
-  //               HttpEndPoints.UPDATE_BENEFICIARIE_DETAILS_ID +
-  //               widget.id,
-  //           token,
-  //           fields);
-
-  //   if (result.status == "success") {
-  //     Navigator.pop(context, true);
-  //   } else {
-  //     Navigator.pop(context, false);
-  //   }
-  // }
-
-  // String getVerificationText(String text) {
-  //   //print(text);
-  //   if (text == "approved") {
-  //     return "Approved";
-  //   }
-  //   return "Approve";
-  // }
-
-  // Function onApprove(BeneficiarieDetails beneficiarieDetails) {
-  //   bool result = false;
-
-  //   Iterator i = beneficiarieDetails?.data?.iterator;
-
-  //   while (i?.moveNext() ?? false) {
-  //     var item = i.current as TemplateDataFields;
-
-  //     if ((item.verification.toBeVerified == true) &&
-  //         (item.verification.status != "approved")) {
-  //       result = true;
-  //       break;
-  //     }
-  //   }
-  //   if (result) {
-  //     return null;
-  //   } else {
-  //     return () {
-  //       onSubmit(context);
-  //     };
-  //   }
-  // }
 }
