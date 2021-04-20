@@ -1,7 +1,9 @@
+import 'package:eduempower/mainpage.dart';
 import 'package:eduempower/public/register.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/public/login.dart';
 import 'package:eduempower/home.dart';
+import 'package:eduempower/home2.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //void main() => runApp(MyApp());
@@ -22,7 +24,7 @@ void main() async {
   print("===============TOKEN====================$_result");
 
   if (_result != null) {
-    _defaultHome = new HomePage(
+    _defaultHome = new MainPage(
       title: "Edu EmPower",
     );
   }
@@ -38,7 +40,6 @@ void main() async {
         ),
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.
-      '/home': (BuildContext context) => new HomePage(),
       '/login': (BuildContext context) => new UserLogin(),
       '/register': (BuildContext context) => new UserRegister()
     },

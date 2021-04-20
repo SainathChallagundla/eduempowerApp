@@ -1,3 +1,4 @@
+import 'package:eduempower/mainpage.dart';
 import 'package:eduempower/public/passwordReset.dart';
 import 'package:eduempower/home.dart';
 import 'package:flutter/material.dart';
@@ -324,7 +325,7 @@ class _UserLoginState extends State<UserLogin> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage(
+              builder: (context) => MainPage(
                     title: "Edu EmPower",
                   )
               // BeneficiariesPage(title: "Beneficiaries"),
