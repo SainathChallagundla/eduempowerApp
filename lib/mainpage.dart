@@ -67,10 +67,6 @@ class _MainPageState extends State<MainPage> {
           title: "donar",
         ),
 
-        TabData(
-          icon: const Icon(Icons.search),
-          title: "search",
-        ),
         // TabData(
         //   icon: const Icon(Icons.settings),
         //   title: "settings",

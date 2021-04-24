@@ -31,6 +31,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
+    name = prefs.getString("name");
+    email = prefs.getString("email");
+    userType = prefs.getString("userType");
+    userCategory = prefs.getString("userCategory");
     var beneficiarieslist =
         await beneficiarieDetails_helper.BeneficiarieDetails()
             .getBeneficiaries(benficiariesurl, token, 0, 0, "created");
