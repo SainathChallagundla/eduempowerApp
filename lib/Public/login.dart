@@ -65,14 +65,14 @@ class _UserLoginState extends State<UserLogin> {
           controller: passwordEditingContrller,
           decoration: InputDecoration(
               labelText: "Password",
-              suffixIcon: IconButton(
+              /* suffixIcon: IconButton(
                   icon: Icon(
                       _isObscure ? Icons.visibility : Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       _isObscure = !_isObscure;
                     });
-                  }),
+                  }),*/
               hintText: "Password",
               labelStyle: TextStyle(
                 color: Colors.black,

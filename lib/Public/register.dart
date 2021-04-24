@@ -67,8 +67,8 @@ class UserRegisterState extends State<UserRegister> {
                   obscureText: _isObscure,
                   autocorrect: false,
                   decoration: InputDecoration(
-                      labelText: "Password:",
-                      suffixIcon: IconButton(
+                    labelText: "Password:",
+                    /* suffixIcon: IconButton(
                           icon: Icon(_isObscure
                               ? Icons.visibility
                               : Icons.visibility_off),
@@ -76,7 +76,8 @@ class UserRegisterState extends State<UserRegister> {
                             setState(() {
                               _isObscure = !_isObscure;
                             });
-                          })),
+                          })*/
+                  ),
                   validator: (str) =>
                       str.length <= 7 ? "Not a Valid Password!" : null,
                   onSaved: (str) => _password = str,
