@@ -10,6 +10,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:eduempower/models/beneficiarieDocuments.dart';
 import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DocumentsPage extends StatefulWidget {
@@ -20,7 +22,7 @@ class DocumentsPage extends StatefulWidget {
 }
 
 class DocumentsPageState extends State<DocumentsPage> {
-  String documentTypeSelection, token, email, name;
+  String documentTypeSelection, token, email, name, userCategory;
   String _filePath;
 
   bool toEnable = false;
@@ -41,6 +43,7 @@ class DocumentsPageState extends State<DocumentsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     email = prefs.getString("email");
+    userCategory = prefs.getString("userCategory");
 
     BeneficiarieDocuments list = await HttpHelper()
         .getBeneficiarieDocuments(url, widget.id, token, 0, 0);
@@ -93,11 +96,13 @@ class DocumentsPageState extends State<DocumentsPage> {
         ],
       ), //
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.file_upload),
-          tooltip: "select a file",
-          elevation: 1,
-          onPressed: getFilePath),
+      floatingActionButton: userCategory == "contributor"
+          ? FloatingActionButton(
+              child: const Icon(Icons.file_upload),
+              tooltip: "select a file",
+              elevation: 1,
+              onPressed: getFilePath)
+          : null,
     );
   }
 
@@ -234,7 +239,6 @@ class DocumentsPageState extends State<DocumentsPage> {
       if (filePath == '') {
         return;
       }*/
-
       FilePickerResult result =
           await FilePicker.platform.pickFiles(type: FileType.any);
       String filePath;
@@ -316,17 +320,22 @@ class DocumentsPageState extends State<DocumentsPage> {
                 ]),
             //  leading:
             trailing: IconButton(
-              icon: Icon(Icons.list),
-              onPressed: () async {
+                icon: Icon(Icons.list),
+                onPressed:
+                    () /*async {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => MyWebView(
-                          title: "Documents",
-                          selectedUrl: HttpEndPoints.BASE_URL +
+                          "Documents",
+                          HttpEndPoints.BASE_URL +
                               HttpEndPoints.GET_FILE +
                               data.documents[index].documentId,
                         )));
-              },
-            ),
+              },*/
+                    async {
+                  await launch(HttpEndPoints.BASE_URL +
+                      HttpEndPoints.GET_FILE +
+                      data.documents[index].documentId);
+                }),
           );
         },
       );
