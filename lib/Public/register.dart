@@ -23,6 +23,8 @@ class UserRegisterState extends State<UserRegister> {
   final formKey = GlobalKey<FormState>();
   final mainKey = GlobalKey<ScaffoldState>();
 
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,15 +64,25 @@ class UserRegisterState extends State<UserRegister> {
                   onSaved: (str) => _mobile = str,
                 ),
                 TextFormField(
+                  obscureText: _isObscure,
                   autocorrect: false,
                   decoration: InputDecoration(
                     labelText: "Password:",
+                    /* suffixIcon: IconButton(
+                          icon: Icon(_isObscure
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          })*/
                   ),
                   validator: (str) =>
                       str.length <= 7 ? "Not a Valid Password!" : null,
                   onSaved: (str) => _password = str,
-                  obscureText: true,
-                ),
+                )
+                //obscureText: false),
               ],
             ),
           )),

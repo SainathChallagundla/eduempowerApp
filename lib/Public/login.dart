@@ -22,6 +22,8 @@ class _UserLoginState extends State<UserLogin> {
   TextEditingController passwordEditingContrller = TextEditingController();
   final mainKey = GlobalKey<ScaffoldState>();
 
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     var column = Column(
@@ -58,11 +60,19 @@ class _UserLoginState extends State<UserLogin> {
         ),
         TextField(
           autofocus: false,
-          obscureText: true,
+          obscureText: _isObscure,
           keyboardType: TextInputType.text,
           controller: passwordEditingContrller,
           decoration: InputDecoration(
               labelText: "Password",
+              /* suffixIcon: IconButton(
+                  icon: Icon(
+                      _isObscure ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  }),*/
               hintText: "Password",
               labelStyle: TextStyle(
                 color: Colors.black,
@@ -130,7 +140,7 @@ class _UserLoginState extends State<UserLogin> {
           collapsed: null,
           header: Text("Register as Contributor"),
           expanded: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               ButtonTheme(
                 child: MaterialButton(
