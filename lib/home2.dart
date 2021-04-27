@@ -11,6 +11,7 @@ import 'package:eduempower/helpers/beneficiarieDetails.dart'
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:eduempower/models/funds.dart' as funds_model;
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
+import 'package:eduempower/models/summary.dart';
 
 class MyHomePage extends StatefulWidget {
   String title;
@@ -22,25 +23,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String token, email, name, userType, userCategory;
   final mainKey = GlobalKey<ScaffoldState>();
-  List<beneficiarieDetails_model.BeneficiarieDetails> beneficiariesdata =
-      List<beneficiarieDetails_model.BeneficiarieDetails>(); //edited line
-  final String benficiariesurl =
-      HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIES;
-  List<funds_model.Fund> donorsdata = List<funds_model.Fund>(); //edited line
-  final String donorurl = HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDS;
+  Summary _summary = Summary();
+
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    email = prefs.getString("email");
-    name = prefs.getString("name");
-    var beneficiarieslist =
-        await beneficiarieDetails_helper.BeneficiarieDetails()
-            .getBeneficiaries(benficiariesurl, token, 0, 0, "created");
-    var donorslist = await fundDetails_helper.FundDetails()
-        .getFundsByDonar(donorurl, token, 0, 0, email);
+    var summary = await HttpHelper()
+        .getSummary(HttpEndPoints.BASE_URL + HttpEndPoints.GET_SUMMARY, token);
     setState(() {
-      beneficiariesdata = beneficiarieslist;
-      donorsdata = donorslist;
+      _summary = summary;
     });
   }
 
@@ -71,11 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 15),
-            slotCard("Total Beneficiaries : ", beneficiariesdata?.length ?? 0),
-            slotCard("No Of Donors :", donorsdata?.length ?? 0),
-            slotCard("Number of Contributors : ", 8),
-            slotCard("Funds Collected:", 120000),
-            slotCard("Funds Contributed:", 11233),
+            slotCard("Total Beneficiaries : ", _summary.noofBenificiaries),
+            slotCard("No Of Donors :", _summary.noofDonars),
+            slotCard("Number of Contributors : ", _summary.noofContributors),
+            slotCard("Funds Collected:", _summary.fundsCollected),
+            slotCard("Funds Contributed:", _summary.fundsContributed),
           ],
         ),
       ),
@@ -83,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Card slotCard(String title, int trailing) {
+  Card slotCard(String title, num trailing) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
