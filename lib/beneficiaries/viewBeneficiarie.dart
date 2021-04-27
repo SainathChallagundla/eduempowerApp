@@ -28,7 +28,7 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     email = prefs.getString("email");
-
+    // print("id======================${widget.id}");
     var details = await HttpHelper().getBeneficiarieById(
         HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIEBYID,
         widget.id,

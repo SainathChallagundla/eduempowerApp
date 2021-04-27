@@ -1,9 +1,8 @@
-import 'package:eduempower/mainpage.dart';
+import 'package:eduempower/contributorMainPage.dart';
+import 'package:eduempower/donarmainpage.dart';
 import 'package:eduempower/public/register.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/public/login.dart';
-import 'package:eduempower/home.dart';
-import 'package:eduempower/home2.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //void main() => runApp(MyApp());
@@ -24,9 +23,15 @@ void main() async {
   print("===============TOKEN====================$_result");
 
   if (_result != null) {
-    _defaultHome = new MainPage(
-      title: "Edu EmPower",
-    );
+    var userCategory = prefs.getString("userCategory");
+    print(userCategory);
+    _defaultHome = userCategory == "donar"
+        ? new DonarMainPage(
+            title: "Edu EmPower",
+          )
+        : ContributorMainPage(
+            title: "Edu EmPower",
+          );
   }
 
   // Run app!

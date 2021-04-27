@@ -7,10 +7,10 @@ import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewFundDetailsPage extends StatefulWidget {
-  final String title;
+  final String id;
   @override
   ViewFundDetailsPageState createState() => ViewFundDetailsPageState();
-  ViewFundDetailsPage({Key key, this.title}) : super(key: key);
+  ViewFundDetailsPage({Key key, this.id}) : super(key: key);
 }
 
 class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
@@ -19,24 +19,25 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
   bool isLoaded = false;
 
   final mainKey = GlobalKey<ScaffoldState>();
-  funds_model.Fund fundData = Fund();
+  Fund fundData = Fund();
 
-  List<funds_model.Fund> data = List<funds_model.Fund>(); //edited line
+  //List<funds_model.Fund> data = List<funds_model.Fund>(); //edited line
 
-  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDS;
+  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDSBYID;
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(widget.id);
     token = prefs.getString("token");
     email = prefs.getString("email");
     name = prefs.getString("name");
     userType = prefs.getString("userType");
     userCategory = prefs.getString("userCategory");
-    var details =
-        await fundDetails_helper.FundDetails().getFunds(url, token, 0, 0);
-
+    var details = await HttpHelper().getFundById(
+        HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDSBYID, widget.id, token);
     setState(() {
-      data = details;
+      print(details);
+      fundData = details;
       isLoaded = true;
     });
   }
@@ -62,94 +63,86 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      body: gridView(context, data),
+      body: gridView(context),
     );
   }
 
-  Widget gridView(BuildContext context, List<funds_model.Fund> data) {
-    if (isLoaded ?? false) {
-      return new GridView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: data?.length ?? 0,
-          shrinkWrap: true,
-          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1, childAspectRatio: 3.0),
-          itemBuilder: (BuildContext context, int index) {
-            return new GestureDetector(
-              child: new Container(
-                alignment: Alignment.topLeft,
-                margin: new EdgeInsets.all(1.0),
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  verticalDirection: VerticalDirection.down,
-                  children: <Widget>[
-                    // Expanded(
-                    //     flex: 1,
-                    // child:
-                    Text(
-                      "",
-                      //data[index].header + ":",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+  Widget gridView(BuildContext context) {
+    if (isLoaded) {
+      return new Container(
+          margin: const EdgeInsets.only(
+              left: 10.0, right: 10.0, top: 10.0, bottom: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            verticalDirection: VerticalDirection.down,
+            children: <Widget>[
+              TextFormField(
+                initialValue: fundData.amountProposed.toString(),
+                keyboardType: TextInputType.number,
+                decoration: new InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.greenAccent, width: 1.0),
                     ),
-                    TextFormField(
-                      //initialValue: beneficiarieDetails.data[index].value,
-                      readOnly: true,
-                      decoration: new InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.greenAccent, width: 1.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 1.0),
-                        ),
-                      ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
                     ),
-                  ],
-                ),
+                    hintText: 'Enter Proposed Amount'),
               ),
-            );
-          });
+              SizedBox(height: 20),
+              TextFormField(
+                initialValue: fundData.modeOfPayment,
+                decoration: new InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.greenAccent, width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    hintText: 'Mode Of Payment'),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                initialValue: fundData.referenceNo,
+                decoration: new InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.greenAccent, width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    hintText: 'Referance No.'),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                initialValue: fundData.moreInfo,
+                maxLines: 3,
+                decoration: new InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.greenAccent, width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    hintText: 'More Info'),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Attach Document/Image",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+            ],
+          ));
     } else {
+      print("..............");
       return Container(
         width: 0,
         height: 0,
       );
-    }
-  }
-
-  ListView buildListView(List<funds_model.Fund> data) {
-    if (data != null) {
-      return ListView.builder(
-        itemCount: data?.length ?? 0,
-        itemBuilder: (context, index) {
-          return ListTile(
-              // title: Text(data != null ? data[index].name : ""),
-              title: Text(data[index].donorEmail ?? ""),
-              trailing: Wrap(spacing: 12, children: <Widget>[
-                IconButton(
-                    onPressed: () async {
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewFundDetailsPage()),
-                      );
-                      setState(() {
-                        this.reload = result;
-                      });
-                      if (result == true) {
-                        this.getInit();
-                      }
-                    },
-                    icon: Icon(Icons.view_list_outlined))
-              ]));
-        },
-      );
-    } else {
-      print("no data....");
-      return ListView();
     }
   }
 }

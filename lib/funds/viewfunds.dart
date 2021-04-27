@@ -7,6 +7,7 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:eduempower/models/funds.dart' as funds_model;
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eduempower/funds/viewFundDetails.dart';
 
 class ViewFundsPage extends StatefulWidget {
   final String title;
@@ -31,8 +32,8 @@ class ViewFundsPageState extends State<ViewFundsPage> {
     name = prefs.getString("name");
     userType = prefs.getString("userType");
     userCategory = prefs.getString("userCategory");
-    var list =
-        await fundDetails_helper.FundDetails().getFunds(url, token, 0, 0);
+    var list = await fundDetails_helper.FundDetails()
+        .getFundsByDonar(url, token, 0, 0, email);
 
     setState(() {
       data = list;
@@ -72,47 +73,14 @@ class ViewFundsPageState extends State<ViewFundsPage> {
           return ListTile(
               // title: Text(data != null ? data[index].name : ""),
               title: Text(data[index].donorEmail ?? ""),
-              leading: IconButton(
-                icon: Icon(Icons.edit_outlined),
-                onPressed: () async {
-                  bool result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditBeneficiariePage(
-                            id: data != null ? data[index].id : "")),
-                  );
-                  setState(() {
-                    this.reload = result ?? false;
-                  });
-                  if (result ?? false) {
-                    this.getInit();
-                  }
-                },
-              ),
               trailing: Wrap(spacing: 12, children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.file_present),
-                  onPressed: () async {
-                    bool result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DocumentsPage(
-                              id: data != null ? data[index].id : "")),
-                    );
-                    setState(() {
-                      this.reload = result;
-                    });
-                    if (result == true) {
-                      this.getInit();
-                    }
-                  },
-                ),
-                IconButton(
                     onPressed: () async {
+                      print(data[index].id);
                       bool result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewBeneficiariePage(
+                            builder: (context) => ViewFundDetailsPage(
                                 id: data != null ? data[index].id : "")),
                       );
                       setState(() {

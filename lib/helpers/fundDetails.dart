@@ -18,18 +18,24 @@ class FundDetails {
         json.decode(response.body), response.statusCode);
   }
 
-  Future<List<fund_model.Fund>> getFunds(
+  Future<List<fund_model.Fund>> getFundsByDonar(
     String url,
     String token,
     int skip,
     int limit,
+    String email,
   ) async {
     final response = await http.get(
-        Uri.parse(url + "/" + skip.toString() + "/" + limit.toString()),
+        Uri.parse(url +
+            "/" +
+            skip.toString() +
+            "/" +
+            limit.toString() +
+            "?donorEmail=" +
+            email),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      print(response.body);
-
+      // print(response.body);
       Iterable l = json.decode(response.body);
       if (l != null) {
         List<fund_model.Fund> list =
