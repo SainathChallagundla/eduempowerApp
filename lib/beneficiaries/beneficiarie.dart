@@ -189,6 +189,18 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                 mainAxisSize: MainAxisSize.min,
                 verticalDirection: VerticalDirection.down,
                 children: <Widget>[
+                  templateData?.templateFields[index].mainHeader == null
+                      ? Container()
+                      : Text(
+                          templateData.templateFields[index].mainHeader + ":",
+                          style: TextStyle(
+                            textBaseline: TextBaseline.ideographic,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                  SizedBox(height: 5),
+                  //: Container(),
                   TextField(
                     key: Key("${templateData.templateFields[index]..name}"),
                     keyboardType: TextInputType.multiline,

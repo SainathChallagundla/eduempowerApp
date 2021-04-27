@@ -5,6 +5,7 @@ import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:eduempower/models/beneficiarieDetails.dart';
 import 'package:eduempower/models/beneficiarieDataFields.dart';
 import 'package:eduempower/models/beneficiarieDocuments.dart';
+import 'package:eduempower/models/funds.dart';
 import 'package:eduempower/models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -163,12 +164,25 @@ class HttpHelper {
       throw Exception('Failed to load the data');
     }
   }
+
+  Future<Fund> getFundById(String url, String id, String token) async {
+    final response = await http.get(Uri.parse(url + id),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return Fund.fromJson(json.decode(response.body));
+      // return BeneficiarieDetails.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load the data');
+    }
+  }
 }
 
 //192.168.0.106  ubuntu//109  ////MainServer   51.195.137.55
+//192.168.43.176
 class HttpEndPoints {
-  static const String BASE_URL = "http://10.0.2.2:50051/";
-
+  static const String BASE_URL = "http://192.168.0.106:50051/";
+  //static const String BASE_URL = "http://192.168.43.176:50051/";
   static const String SIGN_IN = "v1/public/user/mobile/signin";
   static const String REGISTER = "v1/public/user/register";
   static const String RESETPASSWORD = "v1/public/user/resetPassword";
@@ -208,4 +222,6 @@ class HttpEndPoints {
   static const String ADD_FUND = "v1/fund/add";
 
   static const String GET_FUNDS = "v1/fund/getFunds";
+
+  static const String GET_FUNDSBYID = "v1/fund/get/";
 }

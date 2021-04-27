@@ -1,6 +1,6 @@
-import 'package:eduempower/mainpage.dart';
+import 'package:eduempower/donarMainPage.dart';
+import 'package:eduempower/contributorMainPage.dart';
 import 'package:eduempower/public/passwordReset.dart';
-import 'package:eduempower/home.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:eduempower/helpers/httphelper.dart';
@@ -294,7 +294,6 @@ class _UserLoginState extends State<UserLogin> {
         ));
       }
 
-      //final storage = new FlutterSecureStorage();
       UserLogIn user = new UserLogIn(
           email: emailEditingContrller.text,
           password: passwordEditingContrller.text);
@@ -304,33 +303,26 @@ class _UserLoginState extends State<UserLogin> {
 
       if (result.httpStatus == 200 && result.status == "success") {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("token", result.token);
-        // await storage.write(key: "token", value: result.token);
-
         var userFetch = await HttpHelper().fetchUser(emailEditingContrller.text,
             HttpEndPoints.BASE_URL + HttpEndPoints.GET_USER, result.token);
+        await prefs.setString("token", result.token);
         await prefs.setString("name", userFetch.name);
         await prefs.setString("email", userFetch.email);
         await prefs.setString("mobile", userFetch.mobile);
-        print(userFetch.userCategory);
         await prefs.setString("userCategory", userFetch.userCategory);
         await prefs.setString("userType", userFetch.userType);
 
-        //await storage.write(key: "name", value: userFetch.name);
-        // await storage.write(key: "email", value: userFetch.email);
-        // await storage.write(key: "mobile", value: userFetch.mobile);
-        //await storage.write(key: "userCategory", value: userFetch.userCategory);
-        // await storage.write(key: "userType", value: userFetch.userType);
-
+        var userCategory = prefs.getString("userCategory");
         Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainPage(
-                    title: "Edu EmPower",
-                  )
-              // BeneficiariesPage(title: "Beneficiaries"),
-              ),
-        );
+            context,
+            MaterialPageRoute(
+                builder: (context) => userCategory == "donar"
+                    ? DonarMainPage(
+                        title: "Edu EmPower",
+                      )
+                    : ContributorMainPage(
+                        title: "Edu EmPower",
+                      )));
       } else {
         var snackbar = SnackBar(
           content: Text(result.message.toString()),

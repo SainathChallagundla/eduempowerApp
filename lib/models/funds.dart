@@ -30,7 +30,8 @@ class Fund {
   factory Fund.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
     var fs = json['fundStatus'] as List;
-
+    // List<FundStatusFields> fund =
+    //     list.map((i) => FundStatusFields.fromJson(i)).toList();
     List<FundStatusFields> fundStatus =
         fs.map((i) => FundStatusFields.fromJson(i)).toList();
 

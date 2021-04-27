@@ -12,13 +12,10 @@ class BeneficiarieDetails {
   Future<List<beneficiarieDetails_model.BeneficiarieDetails>> getBeneficiaries(
       String url, String token, int skip, int limit, String status) async {
     final response = await http.get(
-        Uri.parse(url +
-            "/" +
-            skip.toString() +
-            "/" +
-            limit.toString() +
-            "?statusForFunding=" +
-            status),
+        Uri.parse(url + "/" + skip.toString() + "/" + limit.toString() //+
+            //"?statusForFunding=" +
+            // status
+            ),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Iterable l = json.decode(response.body);

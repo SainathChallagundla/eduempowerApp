@@ -31,11 +31,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
+    email = prefs.getString("email");
+    name = prefs.getString("name");
     var beneficiarieslist =
         await beneficiarieDetails_helper.BeneficiarieDetails()
             .getBeneficiaries(benficiariesurl, token, 0, 0, "created");
-    var donorslist =
-        await fundDetails_helper.FundDetails().getFunds(donorurl, token, 0, 0);
+    var donorslist = await fundDetails_helper.FundDetails()
+        .getFundsByDonar(donorurl, token, 0, 0, email);
     setState(() {
       beneficiariesdata = beneficiarieslist;
       donorsdata = donorslist;
@@ -69,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 15),
-            slotCard("Total Beneficiaries : ", beneficiariesdata.length),
-            slotCard("No Of Donors :", donorsdata.length),
+            slotCard("Total Beneficiaries : ", beneficiariesdata?.length ?? 0),
+            slotCard("No Of Donors :", donorsdata?.length ?? 0),
             slotCard("Number of Contributors : ", 8),
             slotCard("Funds Collected:", 120000),
             slotCard("Funds Contributed:", 11233),

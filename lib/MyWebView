@@ -1,0 +1,114 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
+
+/*class MyWebView extends StatefulWidget {
+  MyWebView({Key key, this.title, this.selectedUrl}) : super(key: key);
+
+  final String title;
+  final String selectedUrl;
+
+  // final String title;
+  // final String selectedUrl;
+  @override
+  _MyWebView createState() => _MyWebView();
+}
+
+class _MyWebView extends State<MyWebView> {
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+  String os = Platform.operatingSystem;
+
+  @override
+  void initState() {
+    super.initState();
+    // Enable hybrid composition.
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    print("++++++++++++++++++++++++++++++++++++++$os");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Container(
+            child: WebView(
+          initialUrl: widget.selectedUrl,
+          javascriptMode: JavascriptMode.disabled,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+          gestureNavigationEnabled: true,
+          debuggingEnabled: true,
+          allowsInlineMediaPlayback: true,
+        )));
+  }
+}*/
+
+class MyWebView extends StatefulWidget {
+  final String title;
+  final String selectedUrl;
+  MyWebView(this.title, this.selectedUrl);
+  @override
+  createState() => _MyWebViewState(this.title, this.selectedUrl);
+}
+
+// class _MyWebViewState extends State<MyWebView> {
+//   var _url;
+//   var _title;
+//   final _key = UniqueKey();
+//   _MyWebViewState(this._title, this._url);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         appBar: AppBar(),
+//         body: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Container(
+//               alignment: Alignment.center,
+//               child: Container(
+//                 width: 300.0,
+//                 height: 500.0,
+//                 decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(30.0),
+//                     image: DecorationImage(
+//                         image: NetworkImage(
+//                           _url,
+//                         ),
+//                         fit: BoxFit.cover)),
+//               ),
+//             ),
+//           ],
+//         ));
+//   }
+// }
+class _MyWebViewState extends State<MyWebView> {
+  var _url;
+  var _title;
+  final _key = UniqueKey();
+  _MyWebViewState(this._title, this._url);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(alignment: Alignment.center, child: _launchURL()),
+          ],
+        ));
+  }
+
+  _launchURL() async => await canLaunch(_url)
+      ? await launch(
+          _url,
+        )
+      : throw 'Could not launch $_url';
+}

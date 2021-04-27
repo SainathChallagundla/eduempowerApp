@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
-import 'package:eduempower/MyWebView.dart';
 import 'package:flutter/services.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:file_picker/file_picker.dart';
@@ -243,14 +242,18 @@ class DocumentsPageState extends State<DocumentsPage> {
           await FilePicker.platform.pickFiles(type: FileType.any);
       String filePath;
       if (result != null) {
-        filePath = result.files.single.path;
+        filePath = result.files.single.path ?? "";
+        // var fileBytes = result.files.first.bytes;
 
 // Find the ScaffoldMessenger in the widget tree
 // and use it to show a SnackBar.
 
-        print(filePath);
+        // print(filePath);
+        // print(fileBytes);
+        //final filesnackBar = SnackBar(content: Text("$filePath }"));
+        //ScaffoldMessenger.of(context).showSnackBar(filesnackBar);
       } else {
-        final snackBar = SnackBar(content: Text('-------------------->>>>>>>'));
+        final snackBar = SnackBar(content: Text(filePath));
 
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
@@ -308,17 +311,14 @@ class DocumentsPageState extends State<DocumentsPage> {
 
   ListView buildListView(BeneficiarieDocuments data) {
     if (data != null) {
+      print("documentsthereeeeee");
       return ListView.builder(
         itemCount: data.documents?.length ?? 0,
         itemBuilder: (context, index) {
           return ListTile(
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(data.documents[index].documentType),
-                  Text(data.documents[index].documentName)
-                ]),
-            //  leading:
+                children: <Widget>[Text(data.documents[index].documentName)]),
             trailing: IconButton(
                 icon: Icon(Icons.list),
                 onPressed:
@@ -340,6 +340,7 @@ class DocumentsPageState extends State<DocumentsPage> {
         },
       );
     } else {
+      print("emptyDocuments..........");
       return ListView();
     }
   }
