@@ -2,8 +2,6 @@ import 'package:eduempower/models/funds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/httphelper.dart';
-import 'package:eduempower/models/funds.dart' as funds_model;
-import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewFundDetailsPage extends StatefulWidget {
@@ -73,70 +71,63 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
           margin: const EdgeInsets.only(
               left: 10.0, right: 10.0, top: 10.0, bottom: 10),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            verticalDirection: VerticalDirection.down,
-            children: <Widget>[
-              TextFormField(
-                initialValue: fundData.amountProposed.toString(),
-                keyboardType: TextInputType.number,
-                decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.greenAccent, width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                    hintText: 'Enter Proposed Amount'),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: fundData.modeOfPayment,
-                decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.greenAccent, width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                    hintText: 'Mode Of Payment'),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: fundData.referenceNo,
-                decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.greenAccent, width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                    hintText: 'Referance No.'),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                initialValue: fundData.moreInfo,
-                maxLines: 3,
-                decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.greenAccent, width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                    hintText: 'More Info'),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Attach Document/Image",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
-            ],
-          ));
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              verticalDirection: VerticalDirection.down,
+              children: <Widget>[
+                TextFormField(
+                  initialValue: fundData.amountProposed.toString(),
+                  keyboardType: TextInputType.number,
+                  decoration: new InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.greenAccent, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                      ),
+                      hintText: 'Enter Proposed Amount'),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  initialValue: fundData.modeOfPayment,
+                  decoration: new InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.greenAccent, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                      ),
+                      hintText: 'Mode Of Payment'),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  initialValue: fundData.referenceNo,
+                  decoration: new InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.greenAccent, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                      ),
+                      hintText: 'Referance No.'),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                    initialValue: fundData.moreInfo,
+                    maxLines: 3,
+                    decoration: new InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.greenAccent, width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.blue, width: 1.0)),
+                        hintText: 'More Info'))
+              ]));
     } else {
       print("..............");
       return Container(
