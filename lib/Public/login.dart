@@ -21,6 +21,7 @@ class _UserLoginState extends State<UserLogin> {
   TextEditingController emailEditingContrller = TextEditingController();
   TextEditingController passwordEditingContrller = TextEditingController();
   final mainKey = GlobalKey<ScaffoldState>();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class _UserLoginState extends State<UserLogin> {
         ),
         TextField(
           autofocus: false,
-          obscureText: true,
+          obscureText: _isObscure,
           keyboardType: TextInputType.text,
           controller: passwordEditingContrller,
           decoration: InputDecoration(
@@ -72,7 +73,15 @@ class _UserLoginState extends State<UserLogin> {
                   borderSide: BorderSide(
                       width: 1,
                       color: Colors.orange,
-                      style: BorderStyle.solid))),
+                      style: BorderStyle.solid)),
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                  icon: Icon(
+                      _isObscure ? Icons.visibility : Icons.visibility_off))),
         ),
         SizedBox(
           height: 10,
