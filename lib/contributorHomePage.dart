@@ -10,8 +10,6 @@ import 'package:eduempower/models/beneficiarieDetails.dart'
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:eduempower/funds/addfunds.dart';
-import 'package:eduempower/funds/viewfunds.dart';
 
 class ContributorHomePage extends StatefulWidget {
   final String title;
@@ -19,6 +17,8 @@ class ContributorHomePage extends StatefulWidget {
   ContributorHomePageState createState() => ContributorHomePageState();
   ContributorHomePage({Key key, this.title}) : super(key: key);
 }
+
+enum popupmenu { harder, smarter, selfStarter, tradingCharter }
 
 class ContributorHomePageState extends State<ContributorHomePage> {
   String token, email, name, userType, userCategory;
@@ -39,7 +39,6 @@ class ContributorHomePageState extends State<ContributorHomePage> {
     userCategory = prefs.getString("userCategory");
     var list = await beneficiarieDetails_helper.BeneficiarieDetails()
         .getBeneficiaries(url, token, 0, 0, "created");
-
     setState(() {
       data = list;
     });
@@ -301,82 +300,85 @@ class ContributorHomePageState extends State<ContributorHomePage> {
   //   );
   // }
 
-  ListView buildListView(
-      List<beneficiarieDetails_model.BeneficiarieDetails> data) {
-    if (data != null) {
-      return ListView.builder(
-        itemCount: data?.length ?? 0,
-        itemBuilder: (context, index) {
-          return ListTile(
-              // title: Text(data != null ? data[index].name : ""),
-              title: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Colors.orange[300],
-                  child: Column(children: [
-                    Text(data != null ? data[index].name : ""),
-                    Text(data != null ? data[index].statusForFunding : ""),
-                    Text(data != null ? data[index].lastUpdated : ""),
-                  ])), //Text(data[index].name ?? ""),
-              leading: IconButton(
-                icon: Icon(Icons.edit_outlined),
-                onPressed: () async {
-                  bool result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditBeneficiariePage(
-                            id: data != null ? data[index].id : "")),
-                  );
-                  setState(() {
-                    this.reload = result ?? false;
-                  });
-                  if (result ?? false) {
-                    this.getInit();
-                  }
-                },
-              ),
-              trailing: Wrap(spacing: 12, children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.file_present),
-                  onPressed: () async {
-                    bool result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DocumentsPage(
-                              id: data != null ? data[index].id : "")),
-                    );
-                    setState(() {
-                      this.reload = result;
-                    });
-                    if (result == true) {
-                      this.getInit();
-                    }
-                  },
-                ),
-                IconButton(
-                    onPressed: () async {
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewBeneficiariePage(
-                                id: data != null ? data[index].id : "")),
-                      );
-                      setState(() {
-                        this.reload = result;
-                      });
-                      if (result == true) {
-                        this.getInit();
-                      }
-                    },
-                    icon: Icon(Icons.view_list_outlined))
-              ]));
-        },
-      );
-    } else {
-      return ListView();
-    }
-  }
+  // ListView buildListView(
+  //     List<beneficiarieDetails_model.BeneficiarieDetails> data) {
+  //   if (data != null) {
+  //     return ListView.builder(
+  //       itemCount: data?.length ?? 0,
+  //       itemBuilder: (context, index) {
+  //         return ListTile(
+  //             // title: Text(data != null ? data[index].name : ""),
+  //             title: Card(
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(15.0),
+  //                 ),
+  //                 color: Colors.orange[300],
+  //                 child: Column(children: [
+  //                   Text(data != null ? data[index].name : ""),
+  //                   Text(data != null ? data[index].statusForFunding : ""),
+  //                   Text(data != null ? data[index].lastUpdated : ""),
+  //                 ])), //Text(data[index].name ?? ""),
+  //             leading: data[0].user == email
+  //                 ? Container()
+  //                 : IconButton(
+  //                     icon: Icon(Icons.edit_outlined),
+  //                     onPressed: () async {
+  //                       bool result = await Navigator.push(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                             builder: (context) => EditBeneficiariePage(
+  //                                 id: data != null ? data[index].id : "")),
+  //                       );
+  //                       print(data[index].user);
+  //                       setState(() {
+  //                         this.reload = result ?? false;
+  //                       });
+  //                       if (result ?? false) {
+  //                         this.getInit();
+  //                       }
+  //                     },
+  //                   ),
+  //             trailing: Wrap(spacing: 12, children: <Widget>[
+  //               IconButton(
+  //                 icon: Icon(Icons.file_present),
+  //                 onPressed: () async {
+  //                   bool result = await Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                         builder: (context) => DocumentsPage(
+  //                             id: data != null ? data[index].id : "")),
+  //                   );
+  //                   setState(() {
+  //                     this.reload = result;
+  //                   });
+  //                   if (result == true) {
+  //                     this.getInit();
+  //                   }
+  //                 },
+  //               ),
+  //               IconButton(
+  //                   onPressed: () async {
+  //                     bool result = await Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(
+  //                           builder: (context) => ViewBeneficiariePage(
+  //                               id: data != null ? data[index].id : "")),
+  //                     );
+  //                     setState(() {
+  //                       this.reload = result;
+  //                     });
+  //                     if (result == true) {
+  //                       this.getInit();
+  //                     }
+  //                   },
+  //                   icon: Icon(Icons.view_list_outlined))
+  //             ]));
+  //       },
+  //     );
+  //   } else {
+  //     return ListView();
+  //   }
+  // }
 
   ListView buildcardListView(
       List<beneficiarieDetails_model.BeneficiarieDetails> data) {
@@ -385,77 +387,118 @@ class ContributorHomePageState extends State<ContributorHomePage> {
         itemCount: data?.length ?? 0,
         itemBuilder: (context, index) {
           return Card(
+              shape: RoundedRectangleBorder(
+                side: new BorderSide(color: Colors.orange[300], width: 4.0),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
               child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Text("name:${data != null ? data[index].name : ""}"),
-                  Text(data != null ? data[index].statusForFunding : ""),
-                  Text(data != null ? data[index].lastUpdated : ""),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.edit_outlined),
-                    onPressed: () async {
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditBeneficiariePage(
-                                id: data != null ? data[index].id : "")),
-                      );
-                      setState(() {
-                        this.reload = result ?? false;
-                      });
-                      if (result ?? false) {
-                        this.getInit();
-                      }
-                    },
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "name:${data != null ? data[index].name : ""}",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Text(data != null ? data[index].statusForFunding : ""),
+                      Text(data != null ? data[index].lastUpdated : ""),
+                    ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.file_present),
-                    onPressed: () async {
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DocumentsPage(
-                                id: data != null ? data[index].id : "")),
-                      );
-                      setState(() {
-                        this.reload = result;
-                      });
-                      if (result == true) {
-                        this.getInit();
-                      }
-                    },
+                  Column(
+                    children: <Widget>[
+                      data[index].user == email
+                          ? Container()
+                          : IconButton(
+                              icon: Icon(Icons.edit_outlined),
+                              onPressed: () async {
+                                bool result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditBeneficiariePage(
+                                              id: data != null
+                                                  ? data[index].id
+                                                  : "")),
+                                );
+                                setState(() {
+                                  this.reload = result ?? false;
+                                });
+                                if (result ?? false) {
+                                  this.getInit();
+                                }
+                              },
+                            ),
+                      IconButton(
+                        icon: Icon(Icons.file_present),
+                        onPressed: () async {
+                          bool result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DocumentsPage(
+                                    id: data != null ? data[index].id : "")),
+                          );
+                          setState(() {
+                            this.reload = result;
+                          });
+                          if (result == true) {
+                            this.getInit();
+                          }
+                        },
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            bool result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewBeneficiariePage(
+                                      id: data != null ? data[index].id : "")),
+                            );
+                            setState(() {
+                              this.reload = result;
+                            });
+                            if (result == true) {
+                              this.getInit();
+                            }
+                          },
+                          icon: Icon(Icons.view_list_outlined))
+                    ],
                   ),
-                  IconButton(
-                      onPressed: () async {
-                        bool result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ViewBeneficiariePage(
-                                  id: data != null ? data[index].id : "")),
-                        );
-                        setState(() {
-                          this.reload = result;
-                        });
-                        if (result == true) {
-                          this.getInit();
-                        }
-                      },
-                      icon: Icon(Icons.view_list_outlined))
+                  _offsetPopup()
                 ],
-              )
-            ],
-          ));
+              ));
         },
       );
     } else {
       return ListView();
     }
   }
+
+  Widget _offsetPopup() => PopupMenuButton<int>(
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 1,
+            child: Text(
+              "Flutter Open",
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButton(
+                  onPressed: null, icon: Icon(Icons.work),
+                  // Text('Working a lot harder'),
+                )
+              ],
+            ),
+          ),
+        ],
+        icon: Icon(Icons.drag_indicator_sharp),
+        offset: Offset(0, 100),
+      );
 }
