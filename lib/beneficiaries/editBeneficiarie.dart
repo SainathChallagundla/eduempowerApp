@@ -96,7 +96,7 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
                     new Expanded(child: gridView(context, benediciarieData)),
                     SizedBox(height: 20),
                     // To do here ..
-                    Row(
+                    new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         RaisedButton(
@@ -159,6 +159,69 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
           child: new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+            _initialVerification(
+                beneficiarieDetails, index, tobeVerified, context),
+            // FlatButton(
+            //   child: Text(
+            //     getVerificationText(beneficiarieDetails
+            //                 ?.data[index]?.verification?.status ??
+            //             "") ??
+            //         "Approve",
+            //     style: new TextStyle(
+            //       color: getVerificationText(beneficiarieDetails
+            //                       ?.data[index]?.verification?.status ??
+            //                   "") ==
+            //               "Approved"
+            //           ? Colors.green
+            //           : Colors.blue,
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     if (beneficiarieDetails != null &&
+            //         beneficiarieDetails.data.isNotEmpty) {
+            //       var item = beneficiarieDetails.data[index];
+            //       item.verification.status = "approved";
+            //       item.verification.verifiedBy = email;
+            //       beneficiarieDetails.data.removeAt(index);
+            //       beneficiarieDetails.data.insert(index, item);
+            //     }
+            //   },
+            // ),
+            // FlatButton(
+            //   child: Text(
+            //     "Reject",
+            //     style: new TextStyle(
+            //       color: getVerificationText(beneficiarieDetails
+            //                       ?.data[index]?.verification?.status ??
+            //                   "") ==
+            //               "rejected"
+            //           ? Colors.red
+            //           : Colors.blue,
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     if (beneficiarieDetails != null &&
+            //         beneficiarieDetails.data.isNotEmpty) {
+            //       var item = beneficiarieDetails.data[index];
+            //       item.verification.status = "rejected";
+            //       item.verification.verifiedBy = email;
+            //       beneficiarieDetails.data.removeAt(index);
+            //       beneficiarieDetails.data.insert(index, item);
+            //     }
+            //   },
+            // )
+          ]));
+    }
+    return Container(height: 0);
+  }
+
+  Widget _initialVerification(BeneficiarieDetails beneficiarieDetails,
+      int index, bool tobeVerified, context) {
+    if (beneficiarieDetails.data[index].verification.status == "") {
+      print("=============both called=====");
+      return new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
             FlatButton(
               child: Text(
                 getVerificationText(beneficiarieDetails
@@ -189,7 +252,12 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
               child: Text(
                 "Reject",
                 style: new TextStyle(
-                  color: Colors.blue,
+                  color: getVerificationText(beneficiarieDetails
+                                  ?.data[index]?.verification?.status ??
+                              "") ==
+                          "rejected"
+                      ? Colors.red
+                      : Colors.blue,
                 ),
               ),
               onPressed: () {
@@ -203,9 +271,66 @@ class _EditBeneficiariePageState extends State<EditBeneficiariePage> {
                 }
               },
             )
-          ]));
+          ]);
+    } else if (beneficiarieDetails.data[index].verification.status ==
+        "approved") {
+      print("=============reject =====");
+
+      return new FlatButton(
+        child: Text(
+          "Reject",
+          style: new TextStyle(
+            color: getVerificationText(beneficiarieDetails
+                            ?.data[index]?.verification?.status ??
+                        "") ==
+                    "rejected"
+                ? Colors.red
+                : Colors.blue,
+          ),
+        ),
+        onPressed: () {
+          if (beneficiarieDetails != null &&
+              beneficiarieDetails.data.isNotEmpty) {
+            var item = beneficiarieDetails.data[index];
+            item.verification.status = "rejected";
+            item.verification.verifiedBy = email;
+            beneficiarieDetails.data.removeAt(index);
+            beneficiarieDetails.data.insert(index, item);
+          }
+        },
+      );
+    } else if (beneficiarieDetails.data[index].verification.status ==
+        "rejected") {
+      print("=============approved =====");
+
+      return new FlatButton(
+        child: Text(
+          getVerificationText(
+                  beneficiarieDetails?.data[index]?.verification?.status ??
+                      "") ??
+              "Approve",
+          style: new TextStyle(
+            color: getVerificationText(beneficiarieDetails
+                            ?.data[index]?.verification?.status ??
+                        "") ==
+                    "Approved"
+                ? Colors.green
+                : Colors.blue,
+          ),
+        ),
+        onPressed: () {
+          if (beneficiarieDetails != null &&
+              beneficiarieDetails.data.isNotEmpty) {
+            var item = beneficiarieDetails.data[index];
+            item.verification.status = "approved";
+            item.verification.verifiedBy = email;
+            beneficiarieDetails.data.removeAt(index);
+            beneficiarieDetails.data.insert(index, item);
+          }
+        },
+      );
     }
-    return Container(height: 0);
+    //return _temp;
   }
 
   Widget gridView(
