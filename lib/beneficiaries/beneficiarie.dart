@@ -189,10 +189,10 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                 mainAxisSize: MainAxisSize.min,
                 verticalDirection: VerticalDirection.down,
                 children: <Widget>[
-                  templateData?.templateFields[index].mainHeader == null
+                  templateData?.templateFields[index].groupHeader == null
                       ? Container()
                       : Text(
-                          templateData.templateFields[index].mainHeader + ":",
+                          templateData.templateFields[index].groupHeader + ":",
                           style: TextStyle(
                             textBaseline: TextBaseline.ideographic,
                             fontSize: 18,
