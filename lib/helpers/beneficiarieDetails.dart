@@ -11,12 +11,20 @@ import 'package:eduempower/models/response.dart';
 class BeneficiarieDetails {
   Future<List<beneficiarieDetails_model.BeneficiarieDetails>> getBeneficiaries(
       String url, String token, int skip, int limit, String status) async {
-    final response = await http.get(
-        Uri.parse(url + "/" + skip.toString() + "/" + limit.toString() //+
-            //"?statusForFunding=" +
-            // status
-            ),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    Uri uri;
+    if (status == "all") {
+      uri = Uri.parse(url + "/" + skip.toString() + "/" + limit.toString());
+    } else {
+      uri = Uri.parse(url +
+          "/" +
+          skip.toString() +
+          "/" +
+          limit.toString() +
+          "?statusForFunding=" +
+          status);
+    }
+    final response = await http
+        .get(uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Iterable l = json.decode(response.body);
       if (l != null) {

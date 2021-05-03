@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:eduempower/models/fundRequest.dart';
 import 'package:eduempower/models/response.dart';
 import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:eduempower/models/beneficiarieDetails.dart';
@@ -8,6 +9,8 @@ import 'package:eduempower/models/beneficiarieDocuments.dart';
 import 'package:eduempower/models/funds.dart';
 import 'package:eduempower/models/user.dart';
 import 'package:eduempower/models/summary.dart';
+import 'package:eduempower/models/fundRequest.dart' as fundrequest_model;
+
 import 'package:http/http.dart' as http;
 
 class HttpHelper {
@@ -178,6 +181,19 @@ class HttpHelper {
     }
   }
 
+  Future<FundRequest> getFundRequestById(
+      String url, String id, String token) async {
+    final response = await http.get(Uri.parse(url + id),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return FundRequest.fromJson(json.decode(response.body));
+      // return BeneficiarieDetails.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load the data');
+    }
+  }
+
   Future<Summary> getSummary(String url, String token) async {
     final response = await http.get(Uri.parse(url),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -189,13 +205,52 @@ class HttpHelper {
       throw Exception('Failed to load the data');
     }
   }
+
+  Future<List<fundrequest_model.FundRequest>> getFundRequestsByBeneficiary(
+      String url,
+      String token,
+      int skip,
+      int limit,
+      String beneficiarieID) async {
+    Uri uri;
+    if (beneficiarieID == "all") {
+      uri = Uri.parse(url + "/" + skip.toString() + "/" + limit.toString());
+    } else {
+      uri = Uri.parse(url +
+          "/" +
+          skip.toString() +
+          "/" +
+          limit.toString() +
+          "?beneficiarieID=" +
+          beneficiarieID);
+    }
+    final response = await http
+        .get(uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      Iterable l = json.decode(response.body);
+      print(response.body);
+
+      if (l != null) {
+        List<fundrequest_model.FundRequest> list = l
+            .map((model) => fundrequest_model.FundRequest.fromJson(model))
+            .toList();
+        return list;
+      } else {
+        return null;
+      }
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load the data');
+    }
+  }
 }
 
 //192.168.0.106  ubuntu//109  ////MainServer   51.195.137.55
 //192.168.43.176
 class HttpEndPoints {
-  static const String BASE_URL = "http://192.168.0.130:50051/";
-  //static const String BASE_URL = "http://192.168.43.176:50051/";
+  //static const String BASE_URL = "http://192.168.0.130:50051/";
+  static const String BASE_URL = "http://10.0.2.2:50051/";
+
   static const String SIGN_IN = "v1/public/user/mobile/signin";
   static const String REGISTER = "v1/public/user/register";
   static const String RESETPASSWORD = "v1/public/user/resetPassword";
@@ -222,7 +277,7 @@ class HttpEndPoints {
       "v1/user/beneficiarie/details/getBeneficiaries";
 
   static const String GET_BENEFICIARIEBYID =
-      "v1/user/beneficiarie/details//getById/";
+      "v1/user/beneficiarie/details/getById/";
 
   static const String GET_BENEFICIARIE_DOCUMENTS =
       "v1/user/beneficiarie/details/getBeneficiarieDocuments/";
@@ -239,4 +294,16 @@ class HttpEndPoints {
   static const String GET_FUNDSBYID = "v1/fund/get/";
 
   static const String GET_SUMMARY = "/v1/user/getSummary";
+
+  static const String ADD_FUNDREQUEST = "/v1/benificiare/fundrequest/add";
+
+  static const String GET_FUNDREQUESTBYID = "v1/benificiare/fundrequest/get/";
+
+  static const String GET_FUNDREQUESTS = "v1/benificiare/fundrequest/getFunds/";
+
+  static const String UPDATE_FUNDREQUESTBYID =
+      "v1/benificiare/fundrequest/updateBy/";
+
+  static const String DELETE_FUNDREQUESTBYID =
+      "v1/benificiare/fundrequest/delete/";
 }

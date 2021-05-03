@@ -10,6 +10,8 @@ import 'package:eduempower/models/beneficiarieDetails.dart'
 import 'package:eduempower/helpers/beneficiarieDetails.dart'
     as beneficiarieDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eduempower/funds/addfundRequest.dart';
+import 'package:eduempower/funds/viewFundRequests.dart';
 
 class ContributorHomePage extends StatefulWidget {
   final String title;
@@ -21,7 +23,7 @@ class ContributorHomePage extends StatefulWidget {
 enum popupmenu { harder, smarter, selfStarter, tradingCharter }
 
 class ContributorHomePageState extends State<ContributorHomePage> {
-  String token, email, name, userType, userCategory;
+  String token, email, name, userType, userCategory, _mySelection;
   bool reload = false;
   final mainKey = GlobalKey<ScaffoldState>();
 
@@ -38,7 +40,7 @@ class ContributorHomePageState extends State<ContributorHomePage> {
     userType = prefs.getString("userType");
     userCategory = prefs.getString("userCategory");
     var list = await beneficiarieDetails_helper.BeneficiarieDetails()
-        .getBeneficiaries(url, token, 0, 0, "created");
+        .getBeneficiaries(url, token, 0, 0, "all");
     setState(() {
       data = list;
     });
@@ -67,10 +69,45 @@ class ContributorHomePageState extends State<ContributorHomePage> {
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      body: buildcardListView(data),
+      // body: buildcardListView(data),
+      body: Container(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        verticalDirection: VerticalDirection.down,
+        children: <Widget>[
+          // dropdown for status
+          new DropdownButton<String>(
+            items: <String>[
+              'all',
+              'created',
+              'approved',
+              'rejected',
+              'archived'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            hint: Text("Select a status"),
+            onChanged: (newVal) async {
+              setState(() {
+                _mySelection = newVal;
+              });
+              var list = await beneficiarieDetails_helper.BeneficiarieDetails()
+                  .getBeneficiaries(url, token, 0, 0, _mySelection);
+              setState(() {
+                data = list;
+              });
+            },
+            value: _mySelection,
+          ),
+          Expanded(child: buildcardListView(data))
+        ],
+      )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.person_add),
+          child: const Icon(Icons.group_add_outlined),
           onPressed: () async {
             bool result = await Navigator.push(
               context,
@@ -88,298 +125,6 @@ class ContributorHomePageState extends State<ContributorHomePage> {
     );
   }
 
-  // Widget _bottonNavBar(BuildContext context, int index) {
-  //   return BottomAppBar(
-  //     shape: CircularNotchedRectangle(),
-  //     notchMargin: 4.0,
-  //     child: new Row(
-  //       mainAxisSize: MainAxisSize.max,
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: <Widget>[
-  //         IconButton(
-  //           iconSize: 50,
-  //           icon: Image.asset(
-  //             'assets/images/Beneficiaries.png',
-  //           ),
-  //           onPressed: () {},
-  //         ),
-  //         /* GestureDetector(
-  //           onTap: () {
-  //             print("Muruga........");
-  //           },
-  //           child: Tab(
-  //             icon: Container(
-  //               child: Image(
-  //                 image: AssetImage(
-  //                   'assets/images/Beneficiaries.png',
-  //                 ),
-  //                 fit: BoxFit.contain,
-  //               ),
-  //             ),
-  //           ),
-  //         ),*/
-  //         IconButton(
-  //           icon: Icon(Icons.menu),
-  //           onPressed: () async {
-  //             bool result = await Navigator.push(
-  //               context,
-  //               MaterialPageRoute(builder: (context) => ViewFundsPage()),
-  //             );
-  //             setState(() {
-  //               this.reload = result;
-  //             });
-  //             if (result == true) {
-  //               this.getInit();
-  //             }
-  //             icon:
-  //             Icon(Icons.view_list_outlined);
-  //           },
-  //         ),
-  //         IconButton(
-  //           icon: Icon(Icons.search),
-  //           onPressed: () {},
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _drawer(BuildContext context) {
-  //   return Drawer(
-  //     // Add a ListView to the drawer. This ensures the user can scroll
-  //     // through the options in the drawer if there isn't enough vertical
-  //     // space to fit everything.
-  //     child: ListView(
-  //       // Important: Remove any padding from the ListView.
-  //       padding: EdgeInsets.zero,
-  //       children: <Widget>[
-  //         DrawerHeader(
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.start,
-  //             verticalDirection: VerticalDirection.down,
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: <Widget>[
-  //               Expanded(
-  //                   child: Center(
-  //                       child: Text("Edu Empower",
-  //                           style: TextStyle(
-  //                               color: Colors.grey,
-  //                               fontFamily: 'Logofont',
-  //                               fontWeight: FontWeight.bold,
-  //                               fontSize: 20)))),
-  //               SizedBox(height: 5),
-  //               Text('Hello $name'),
-  //               SizedBox(height: 5),
-  //               Text('Registered Email: $email'),
-  //               SizedBox(height: 5),
-  //               OutlineButton(
-  //                 child: Text("Edit Profile"),
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                   if (userType == "individual") {
-  //                     Navigator.of(context)
-  //                         .push(MaterialPageRoute(
-  //                             builder: (BuildContext context) =>
-  //                                 IndividualPage()))
-  //                         .then((value) {
-  //                       if (value == true) {
-  //                         mainKey.currentState.showSnackBar(new SnackBar(
-  //                             content: Text("User Profile Updation Successful"),
-  //                             duration: Duration(milliseconds: 1000)));
-  //                       } else if (value == false) {
-  //                         mainKey.currentState.showSnackBar(new SnackBar(
-  //                             content: Text("User Profile Updation Failed"),
-  //                             duration: Duration(milliseconds: 1000)));
-  //                       } else {}
-  //                       // Run the code here using the value
-  //                     });
-  //                   } else if (userType == "organization") {
-  //                     Navigator.of(context)
-  //                         .push(MaterialPageRoute(
-  //                             builder: (BuildContext context) =>
-  //                                 OrganizationPage()))
-  //                         .then((value) {
-  //                       if (value == true) {
-  //                         mainKey.currentState.showSnackBar(new SnackBar(
-  //                             content: Text(
-  //                                 "Organization User Profile Updation Successful"),
-  //                             duration: Duration(milliseconds: 1000)));
-  //                       } else if (value == false) {
-  //                         mainKey.currentState.showSnackBar(new SnackBar(
-  //                             content: Text(
-  //                                 "Organization User Profile Updation Failed"),
-  //                             duration: Duration(milliseconds: 1000)));
-  //                       } else {}
-  //                       // Run the code here using the value
-  //                     });
-  //                   }
-  //                 },
-  //               )
-  //             ],
-  //           ), //Text('Hello $name'),
-  //           decoration: BoxDecoration(
-  //             color: Colors.orange[100],
-  //           ),
-  //         ),
-  //         ListTile(
-  //           title: Text('About'),
-  //           onTap: () {
-  //             // Update the state of the app
-  //             // ...
-  //             // Then close the drawer
-  //             Navigator.pop(context);
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => MyStatefulWidget()));
-  //           },
-  //         ),
-  //         ListTile(
-  //           title: Text('Contact'),
-  //           onTap: () {
-  //             // Update the state of the app
-  //             // ...
-  //             // Then close the drawer
-  //             Navigator.pop(context);
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => MyStatefulWidget()));
-  //           },
-  //         ),
-  //         ListTile(
-  //           title: Text('Support'),
-  //           onTap: () {
-  //             // Update the state of the app
-  //             // ...
-  //             // Then close the drawer
-  //             Navigator.pop(context);
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => MyStatefulWidget()));
-  //           },
-  //         ),
-  //         ListTile(
-  //           title: Text('Share'),
-  //           onTap: () {
-  //             // Update the state of the appR
-  //             // ...
-  //             // Then close the drawer
-  //             Navigator.pop(context);
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => MyStatefulWidget()));
-  //           },
-  //         ),
-  //         ListTile(
-  //           title: Text('Enquiry'),
-  //           onTap: () async {
-  //             // Update the state of the app
-  //             // ...
-  //             // Then close the drawer
-  //             // final storage = new FlutterSecureStorage();
-  //             // await storage.deleteAll();
-  //             SharedPreferences prefs = await SharedPreferences.getInstance();
-  //             await prefs.clear();
-  //             Navigator.of(context).pop();
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => UserLogin()));
-  //           },
-  //         ),
-  //         ListTile(
-  //           title: Text('Logout'),
-  //           onTap: () async {
-  //             // Update the state of the app
-  //             // ...
-  //             // Then close the drawer
-  //             // final storage = new FlutterSecureStorage();
-  //             // await storage.deleteAll();
-  //             SharedPreferences prefs = await SharedPreferences.getInstance();
-  //             await prefs.clear();
-  //             Navigator.of(context).pop();
-  //             Navigator.of(context).push(MaterialPageRoute(
-  //                 builder: (BuildContext context) => UserLogin()));
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // ListView buildListView(
-  //     List<beneficiarieDetails_model.BeneficiarieDetails> data) {
-  //   if (data != null) {
-  //     return ListView.builder(
-  //       itemCount: data?.length ?? 0,
-  //       itemBuilder: (context, index) {
-  //         return ListTile(
-  //             // title: Text(data != null ? data[index].name : ""),
-  //             title: Card(
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(15.0),
-  //                 ),
-  //                 color: Colors.orange[300],
-  //                 child: Column(children: [
-  //                   Text(data != null ? data[index].name : ""),
-  //                   Text(data != null ? data[index].statusForFunding : ""),
-  //                   Text(data != null ? data[index].lastUpdated : ""),
-  //                 ])), //Text(data[index].name ?? ""),
-  //             leading: data[0].user == email
-  //                 ? Container()
-  //                 : IconButton(
-  //                     icon: Icon(Icons.edit_outlined),
-  //                     onPressed: () async {
-  //                       bool result = await Navigator.push(
-  //                         context,
-  //                         MaterialPageRoute(
-  //                             builder: (context) => EditBeneficiariePage(
-  //                                 id: data != null ? data[index].id : "")),
-  //                       );
-  //                       print(data[index].user);
-  //                       setState(() {
-  //                         this.reload = result ?? false;
-  //                       });
-  //                       if (result ?? false) {
-  //                         this.getInit();
-  //                       }
-  //                     },
-  //                   ),
-  //             trailing: Wrap(spacing: 12, children: <Widget>[
-  //               IconButton(
-  //                 icon: Icon(Icons.file_present),
-  //                 onPressed: () async {
-  //                   bool result = await Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                         builder: (context) => DocumentsPage(
-  //                             id: data != null ? data[index].id : "")),
-  //                   );
-  //                   setState(() {
-  //                     this.reload = result;
-  //                   });
-  //                   if (result == true) {
-  //                     this.getInit();
-  //                   }
-  //                 },
-  //               ),
-  //               IconButton(
-  //                   onPressed: () async {
-  //                     bool result = await Navigator.push(
-  //                       context,
-  //                       MaterialPageRoute(
-  //                           builder: (context) => ViewBeneficiariePage(
-  //                               id: data != null ? data[index].id : "")),
-  //                     );
-  //                     setState(() {
-  //                       this.reload = result;
-  //                     });
-  //                     if (result == true) {
-  //                       this.getInit();
-  //                     }
-  //                   },
-  //                   icon: Icon(Icons.view_list_outlined))
-  //             ]));
-  //       },
-  //     );
-  //   } else {
-  //     return ListView();
-  //   }
-  // }
-
   ListView buildcardListView(
       List<beneficiarieDetails_model.BeneficiarieDetails> data) {
     if (data != null) {
@@ -388,7 +133,7 @@ class ContributorHomePageState extends State<ContributorHomePage> {
         itemBuilder: (context, index) {
           return Card(
               shape: RoundedRectangleBorder(
-                side: new BorderSide(color: Colors.orange[300], width: 4.0),
+                side: new BorderSide(color: Colors.orange[300], width: 2.0),
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Row(
@@ -407,66 +152,7 @@ class ContributorHomePageState extends State<ContributorHomePage> {
                       Text(data != null ? data[index].lastUpdated : ""),
                     ],
                   ),
-                  Column(
-                    children: <Widget>[
-                      data[index].user == email
-                          ? Container()
-                          : IconButton(
-                              icon: Icon(Icons.edit_outlined),
-                              onPressed: () async {
-                                bool result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditBeneficiariePage(
-                                              id: data != null
-                                                  ? data[index].id
-                                                  : "")),
-                                );
-                                setState(() {
-                                  this.reload = result ?? false;
-                                });
-                                if (result ?? false) {
-                                  this.getInit();
-                                }
-                              },
-                            ),
-                      IconButton(
-                        icon: Icon(Icons.file_present),
-                        onPressed: () async {
-                          bool result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DocumentsPage(
-                                    id: data != null ? data[index].id : "")),
-                          );
-                          setState(() {
-                            this.reload = result;
-                          });
-                          if (result == true) {
-                            this.getInit();
-                          }
-                        },
-                      ),
-                      IconButton(
-                          onPressed: () async {
-                            bool result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewBeneficiariePage(
-                                      id: data != null ? data[index].id : "")),
-                            );
-                            setState(() {
-                              this.reload = result;
-                            });
-                            if (result == true) {
-                              this.getInit();
-                            }
-                          },
-                          icon: Icon(Icons.view_list_outlined))
-                    ],
-                  ),
-                  _offsetPopup()
+                  _offsetPopup(index)
                 ],
               ));
         },
@@ -476,29 +162,111 @@ class ContributorHomePageState extends State<ContributorHomePage> {
     }
   }
 
-  Widget _offsetPopup() => PopupMenuButton<int>(
+  Widget _offsetPopup(index) => PopupMenuButton<int>(
         itemBuilder: (context) => [
           PopupMenuItem(
-            value: 1,
-            child: Text(
-              "Flutter Open",
-              style: TextStyle(fontWeight: FontWeight.w700),
-            ),
-          ),
+              value: 1,
+              child: data[index].user == email
+                  ? Container()
+                  : FlatButton.icon(
+                      icon: Icon(Icons.edit_outlined),
+                      label: Text("Edit Beneficiarie"),
+                      onPressed: () async {
+                        bool result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditBeneficiariePage(
+                                  id: data != null ? data[index].id : "")),
+                        );
+                        setState(() {
+                          this.reload = result ?? false;
+                        });
+                        if (result ?? false) {
+                          this.getInit();
+                        }
+                      },
+                    )),
           PopupMenuItem(
-            value: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  onPressed: null, icon: Icon(Icons.work),
-                  // Text('Working a lot harder'),
-                )
-              ],
+              value: 2,
+              child: FlatButton.icon(
+                  onPressed: () async {
+                    bool result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ViewBeneficiariePage(
+                              id: data != null ? data[index].id : "")),
+                    );
+                    setState(() {
+                      this.reload = result;
+                    });
+                    if (result == true) {
+                      this.getInit();
+                    }
+                  },
+                  icon: Icon(Icons.view_list_outlined),
+                  label: Text("View Beneficiatie Details"))),
+          PopupMenuItem(
+            value: 3,
+            child: FlatButton.icon(
+              icon: Icon(Icons.file_present),
+              label: Text("Documents"),
+              onPressed: () async {
+                bool result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DocumentsPage(
+                          id: data != null ? data[index].id : "")),
+                );
+                setState(() {
+                  this.reload = result;
+                });
+                if (result == true) {
+                  this.getInit();
+                }
+              },
             ),
           ),
+          data[index].statusForFunding == "approved" ||
+                  data[index].statusForFunding == "created"
+              ? PopupMenuItem(
+                  value: 4,
+                  child: FlatButton.icon(
+                      onPressed: () async {
+                        bool result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FundRequestPage(
+                                  id: data != null ? data[index].id : "")),
+                        );
+                        setState(() {
+                          this.reload = result ?? false;
+                        });
+                        if (result ?? false) {
+                          this.getInit();
+                        }
+                      },
+                      icon: Icon(Icons.request_page_rounded),
+                      label: Text("Request For Fund")))
+              : PopupMenuItem(child: Container()),
+          PopupMenuItem(
+              child: FlatButton.icon(
+                  onPressed: () async {
+                    bool result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ViewFundRequestsPage(
+                              id: data != null ? data[index].id : "")),
+                    );
+                    setState(() {
+                      this.reload = result ?? false;
+                    });
+                    if (result ?? false) {
+                      this.getInit();
+                    }
+                  },
+                  icon: Icon(Icons.money_rounded),
+                  label: Text("Fund Requestes")))
         ],
-        icon: Icon(Icons.drag_indicator_sharp),
-        offset: Offset(0, 100),
+        icon: Icon(Icons.format_list_bulleted),
       );
 }
