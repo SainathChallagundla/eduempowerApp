@@ -36,8 +36,9 @@ dependencies:
   webview_flutter: ^2.0.3
   shared_preferences: ^2.0.5
   url_launcher: ^6.0.3
-  custom_bottom_navigation_bar: ^0.0.1
   convex_bottom_navigation: ^1.1.1
+  styled_text: ^2.0.0
+
 
 
 

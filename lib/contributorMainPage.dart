@@ -19,6 +19,8 @@ class _ContributorMainPageState extends State<ContributorMainPage> {
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    name = prefs.getString("name");
+    email = prefs.getString("email");
     userCategory = prefs.getString("userCategory");
   }
 

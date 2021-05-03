@@ -102,7 +102,8 @@ class TemplateFields {
   final String type;
   final bool required;
   final String regex;
-  final String mainHeader;
+  final String groupHeader;
+  final String group;
   final Verification verification;
   TemplateFields(
       {this.name,
@@ -110,7 +111,8 @@ class TemplateFields {
       this.type,
       this.required,
       this.regex,
-      this.mainHeader,
+      this.groupHeader,
+      this.group,
       this.verification});
 
   factory TemplateFields.fromJson(Map<String, dynamic> json) {
@@ -120,7 +122,8 @@ class TemplateFields {
       type: json['type'],
       required: json['required'],
       regex: json['regex'],
-      mainHeader: json["mainHeader"],
+      groupHeader: json["groupHeader"],
+      group: json["Header"],
       verification: Verification.fromJson(json['verification']),
     );
   }
@@ -132,7 +135,8 @@ class TemplateFields {
     map["type"] = type;
     map["required"] = required;
     map["regex"] = regex;
-    map["mainHeader"] = mainHeader;
+    map["groupHeader"] = groupHeader;
+    map["group"] = group;
     map["verification"] = verification;
     return map;
   }

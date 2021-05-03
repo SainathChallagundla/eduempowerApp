@@ -311,7 +311,6 @@ class DocumentsPageState extends State<DocumentsPage> {
 
   ListView buildListView(BeneficiarieDocuments data) {
     if (data != null) {
-      print("documentsthereeeeee");
       return ListView.builder(
         itemCount: data.documents?.length ?? 0,
         itemBuilder: (context, index) {
@@ -340,7 +339,7 @@ class DocumentsPageState extends State<DocumentsPage> {
         },
       );
     } else {
-      print("emptyDocuments..........");
+      print("No Documents Foun ");
       return ListView();
     }
   }

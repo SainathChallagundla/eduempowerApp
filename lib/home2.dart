@@ -4,13 +4,7 @@ import 'package:eduempower/drawer/individual.dart';
 import 'package:eduempower/drawer/organization.dart';
 import 'package:eduempower/dropdown.dart';
 import 'package:eduempower/public/login.dart';
-import 'package:eduempower/models/beneficiarieDetails.dart'
-    as beneficiarieDetails_model;
-import 'package:eduempower/helpers/beneficiarieDetails.dart'
-    as beneficiarieDetails_helper;
 import 'package:eduempower/helpers/httphelper.dart';
-import 'package:eduempower/models/funds.dart' as funds_model;
-import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:eduempower/models/summary.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -23,15 +17,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String token, email, name, userType, userCategory;
   final mainKey = GlobalKey<ScaffoldState>();
-  Summary _summary = Summary();
+  Summary summary = Summary();
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    var summary = await HttpHelper()
+    email = prefs.getString("email");
+    name = prefs.getString("name");
+    userType = prefs.getString("userType");
+    var _summary = await HttpHelper()
         .getSummary(HttpEndPoints.BASE_URL + HttpEndPoints.GET_SUMMARY, token);
     setState(() {
-      _summary = summary;
+      summary = _summary;
     });
   }
 
@@ -62,11 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 15),
-            slotCard("Total Beneficiaries : ", _summary.noofBenificiaries),
-            slotCard("No Of Donors :", _summary.noofDonars),
-            slotCard("Number of Contributors : ", _summary.noofContributors),
-            slotCard("Funds Collected:", _summary.fundsCollected),
-            slotCard("Funds Contributed:", _summary.fundsContributed),
+            slotCard("Total Beneficiaries : ", summary.noofBenificiaries),
+            slotCard("No Of Donors :", summary.noofDonars),
+            slotCard("Number of Contributors : ", summary.noofContributors),
+            slotCard("Funds Collected:", summary.fundsCollected),
+            slotCard("Funds Contributed:", summary.fundsContributed),
           ],
         ),
       ),
