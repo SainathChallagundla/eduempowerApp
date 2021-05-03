@@ -24,7 +24,6 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    print(widget.id);
     var details = await HttpHelper().getFundRequestsByBeneficiary(
         HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDREQUESTS,
         token,
@@ -90,6 +89,12 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                                         ? fundRequestData[index].id
                                         : "")),
                           );
+                          setState(() {
+                            this.reload = result ?? false;
+                          });
+                          if (result ?? false) {
+                            this.getInit();
+                          }
                         },
                         icon: Icon(Icons.edit_outlined)),
                     Column(
@@ -106,9 +111,6 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                     IconButton(
                         onPressed: () async {
                           await onSubmit(context, index);
-                          setState(() {
-                            reload = false;
-                          });
                         },
                         icon: Icon(Icons.delete_forever_outlined))
                   ]));

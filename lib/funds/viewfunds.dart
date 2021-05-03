@@ -69,7 +69,10 @@ class ViewFundsPageState extends State<ViewFundsPage> {
         itemBuilder: (context, index) {
           return ListTile(
               // title: Text(data != null ? data[index].name : ""),
-              title: Text(data[index].donorEmail ?? ""),
+              title: Text(
+                data[index].amountProposed.toString() ?? "",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
               trailing: Wrap(spacing: 12, children: <Widget>[
                 IconButton(
                     onPressed: () async {

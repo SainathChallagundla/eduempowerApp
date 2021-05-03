@@ -107,11 +107,7 @@ class _FundRequestPageState extends State<FundRequestPage> {
         token,
         fundRequest);
     if (result.status == "success") {
-      print("success=============");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ViewFundRequestsPage()),
-      );
+      Navigator.pop(context, true);
     } else {
       Navigator.pop(context, false);
     }
