@@ -248,8 +248,8 @@ class HttpHelper {
 //192.168.0.106  ubuntu//109  ////MainServer   51.195.137.55
 //192.168.43.176
 class HttpEndPoints {
-  //static const String BASE_URL = "http://192.168.0.130:50051/";
-  static const String BASE_URL = "http://10.0.2.2:50051/";
+  static const String BASE_URL = "http://192.168.0.130:50051/";
+  // static const String BASE_URL = "http://10.0.2.2:50051/";
 
   static const String SIGN_IN = "v1/public/user/mobile/signin";
   static const String REGISTER = "v1/public/user/register";
@@ -293,7 +293,7 @@ class HttpEndPoints {
 
   static const String GET_FUNDSBYID = "v1/fund/get/";
 
-  static const String GET_SUMMARY = "/v1/user/getSummary";
+  static const String GET_SUMMARY = "v1/user/getSummary/";
 
   static const String ADD_FUNDREQUEST = "/v1/benificiare/fundrequest/add";
 

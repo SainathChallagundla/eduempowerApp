@@ -25,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
     email = prefs.getString("email");
     name = prefs.getString("name");
     userType = prefs.getString("userType");
+    print("TOKEN========$token");
     var _summary = await HttpHelper()
         .getSummary(HttpEndPoints.BASE_URL + HttpEndPoints.GET_SUMMARY, token);
     setState(() {
