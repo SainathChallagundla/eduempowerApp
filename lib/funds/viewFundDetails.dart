@@ -34,7 +34,6 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
     var details = await HttpHelper().getFundById(
         HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDSBYID, widget.id, token);
     setState(() {
-      print(details);
       fundData = details;
       isLoaded = true;
     });
@@ -129,7 +128,6 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
                         hintText: 'More Info'))
               ]));
     } else {
-      print("..............");
       return Container(
         width: 0,
         height: 0,

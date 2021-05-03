@@ -117,11 +117,7 @@ class _EditFundRequestPageState extends State<EditFundRequestPage> {
         fundRequest);
     print(widget.id);
     if (result.status == "success") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ViewFundRequestsPage(id: widget.id)),
-      );
+      Navigator.pop(context, true);
     } else {
       Navigator.pop(context, false);
     }

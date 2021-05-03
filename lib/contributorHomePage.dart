@@ -133,28 +133,260 @@ class ContributorHomePageState extends State<ContributorHomePage> {
         itemBuilder: (context, index) {
           return Card(
               shape: RoundedRectangleBorder(
-                side: new BorderSide(color: Colors.orange[300], width: 2.0),
+                side: new BorderSide(color: Colors.orange[300], width: 1.0),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "name:${data != null ? data[index].name : ""}",
+                        "name: ${data != null ? data[index].name : ""}",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Text(data != null ? data[index].statusForFunding : ""),
-                      Text(data != null ? data[index].lastUpdated : ""),
+                      Text(
+                        "Status: ${data != null ? data[index].statusForFunding : ""}",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Status: ${data != null ? data[index].lastUpdated : ""}",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
-                  _offsetPopup(index)
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: <
+                      Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      //crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        FlatButton.icon(
+                            shape: RoundedRectangleBorder(
+                              side: new BorderSide(
+                                width: 2.0,
+                                color: Colors.orange[300],
+                              ),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Colors.orange[300],
+                            onPressed: () async {
+                              bool result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewBeneficiariePage(
+                                        id: data != null
+                                            ? data[index].id
+                                            : "")),
+                              );
+                              setState(() {
+                                this.reload = result;
+                              });
+                              if (result == true) {
+                                this.getInit();
+                              }
+                            },
+                            icon: Icon(Icons.view_list_outlined),
+                            label: Text("View Beneficiary Details")),
+                        data[index].user == email
+                            ? Container()
+                            : FlatButton.icon(
+                                shape: RoundedRectangleBorder(
+                                  side: new BorderSide(
+                                    width: 2.0,
+                                    color: Colors.orange[300],
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                color: Colors.orange[300],
+                                icon: Icon(Icons.edit_outlined),
+                                label: Text("Edit Beneficiary Detaild"),
+                                onPressed: () async {
+                                  bool result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditBeneficiariePage(
+                                                id: data != null
+                                                    ? data[index].id
+                                                    : "")),
+                                  );
+                                  setState(() {
+                                    this.reload = result ?? false;
+                                  });
+                                  if (result ?? false) {
+                                    this.getInit();
+                                  }
+                                },
+                              ),
+                        FlatButton.icon(
+                          shape: RoundedRectangleBorder(
+                            side: new BorderSide(
+                              width: 2.0,
+                              color: Colors.orange[300],
+                            ),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: Colors.orange[300],
+                          icon: Icon(Icons.file_present),
+                          label: Text("Documents"),
+                          onPressed: () async {
+                            bool result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DocumentsPage(
+                                      id: data != null ? data[index].id : "")),
+                            );
+                            setState(() {
+                              this.reload = result;
+                            });
+                            if (result == true) {
+                              this.getInit();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        data[index].statusForFunding == "approved" ||
+                                data[index].statusForFunding == "created"
+                            ? FlatButton.icon(
+                                shape: RoundedRectangleBorder(
+                                  side: new BorderSide(
+                                    width: 2.0,
+                                    color: Colors.orange[300],
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                color: Colors.orange[300],
+                                onPressed: () async {
+                                  bool result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FundRequestPage(
+                                            id: data != null
+                                                ? data[index].id
+                                                : "")),
+                                  );
+                                  setState(() {
+                                    this.reload = result ?? false;
+                                  });
+                                  if (result ?? false) {
+                                    this.getInit();
+                                  }
+                                },
+                                icon: Icon(Icons.request_page_rounded),
+                                label: Text("Request For Fund"))
+                            : Container(),
+                        FlatButton.icon(
+                            shape: RoundedRectangleBorder(
+                              side: new BorderSide(
+                                width: 2.0,
+                                color: Colors.orange[300],
+                              ),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Colors.orange[300],
+                            onPressed: () async {
+                              bool result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewFundRequestsPage(
+                                        id: data != null
+                                            ? data[index].id
+                                            : "")),
+                              );
+                              setState(() {
+                                this.reload = result ?? false;
+                              });
+                              if (result ?? false) {
+                                this.getInit();
+                              }
+                            },
+                            icon: Icon(Icons.money_rounded),
+                            label: Text("FundRequestes")),
+                        FlatButton.icon(
+                            shape: RoundedRectangleBorder(
+                              side: new BorderSide(
+                                width: 2.0,
+                                color: Colors.orange[300],
+                              ),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Colors.orange[300],
+                            onPressed: () {},
+                            icon: const Text(
+                              ("\u{20B9}"),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            label: Text("Add Fund"))
+                        // Text("hel/lo"),
+                        // Text("hel/lo")
+                      ],
+                    )
+                  ])
                 ],
               ));
+          //  Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: <Widget>[
+          //     Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: <Widget>[
+          //         Text(
+          //           "name:${data != null ? data[index].name : ""}",
+          //           style: TextStyle(
+          //               fontSize: 20, fontWeight: FontWeight.bold),
+          //         ),
+          //         Text(data != null ? data[index].statusForFunding : ""),
+          //         Text(data != null ? data[index].lastUpdated : ""),
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.start,
+          //           children: <Widget>[
+          //             Column(
+          //                 mainAxisAlignment: MainAxisAlignment.start,
+          //                 children: <Widget>[
+          //                   IconButton(
+          //                     iconSize: 15,
+          //                     icon: Icon(Icons.edit_outlined),
+          //                     //label: Text("Edit Beneficiarie"),
+          //                     onPressed: () async {
+          //                       bool result = await Navigator.push(
+          //                         context,
+          //                         MaterialPageRoute(
+          //                             builder: (context) =>
+          //                                 EditBeneficiariePage(
+          //                                     id: data != null
+          //                                         ? data[index].id
+          //                                         : "")),
+          //                       );
+          //                       setState(() {
+          //                         this.reload = result ?? false;
+          //                       });
+          //                       if (result ?? false) {
+          //                         this.getInit();
+          //                       }
+          //                     },
+          //                   ),
+          //                   Text(
+          //                     "Edit Beneficiarie",
+          //                     style: TextStyle(fontSize: 10),
+          //                   )
+          //                 ])
+          //           ],
+          //         )
+          //       ],
+          //     ),
+          //     //_offsetPopup(index),
+          //   ],
+          // ));
         },
       );
     } else {
