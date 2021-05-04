@@ -12,6 +12,7 @@ import 'package:eduempower/helpers/beneficiarieDetails.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduempower/funds/addfundRequest.dart';
 import 'package:eduempower/funds/viewFundRequests.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ContributorHomePage extends StatefulWidget {
   final String title;
@@ -19,8 +20,6 @@ class ContributorHomePage extends StatefulWidget {
   ContributorHomePageState createState() => ContributorHomePageState();
   ContributorHomePage({Key key, this.title}) : super(key: key);
 }
-
-enum popupmenu { harder, smarter, selfStarter, tradingCharter }
 
 class ContributorHomePageState extends State<ContributorHomePage> {
   String token, email, name, userType, userCategory, _mySelection;
@@ -138,27 +137,15 @@ class ContributorHomePageState extends State<ContributorHomePage> {
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "name: ${data != null ? data[index].name : ""}",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "Status: ${data != null ? data[index].statusForFunding : ""}",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "Status: ${data != null ? data[index].lastUpdated : ""}",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  Text(
+                    "name: ${data != null ? data[index].name : ""}",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Status: ${data != null ? data[index].statusForFunding : ""}",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: <
                       Widget>[

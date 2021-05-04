@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ViewBeneficiariePage extends StatefulWidget {
   final String id;
@@ -99,7 +100,7 @@ class _ViewBeneficiariePageState extends State<ViewBeneficiariePage> {
           itemCount: beneficiarieDetails?.data?.length ?? 0,
           shrinkWrap: true,
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1, childAspectRatio: 3.0),
+              crossAxisCount: 1, childAspectRatio: kIsWeb ? 10.0 : 3.0),
           itemBuilder: (BuildContext context, int index) {
             return new GestureDetector(
               child: new Container(

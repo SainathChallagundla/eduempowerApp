@@ -19,6 +19,8 @@ class _FundRequestPageState extends State<FundRequestPage> {
   String beneficiarieID, moreInfo, status, lastUpdated, token;
   num fundRequired;
   final mainKey = GlobalKey<ScaffoldState>();
+  DateTime fundRequiredBy = DateTime.now();
+
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
@@ -82,7 +84,21 @@ class _FundRequestPageState extends State<FundRequestPage> {
                             hintText: 'More Info'),
                         onChanged: (text) {
                           moreInfo = text;
-                        })
+                        }),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    RaisedButton(
+                      color: Colors.orange[300],
+                      onPressed: () => _selectDate(context),
+                      child: Text('Select date FundRequiredBy'),
+                    ),
+                    Text(
+                      "AmountRequiredBy:${fundRequiredBy.toLocal()}"
+                          .split(' ')[0],
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ]))),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -93,11 +109,25 @@ class _FundRequestPageState extends State<FundRequestPage> {
     );
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+
+    if (picked != null && picked != fundRequiredBy)
+      setState(() {
+        fundRequiredBy = picked;
+      });
+  }
+
   Future<void> onSubmit(BuildContext context) async {
     FundRequest fundRequest = new FundRequest(
       //id: id,
       beneficiarieID: widget.id,
       fundRequired: fundRequired,
+      fundRequiredBy: fundRequiredBy.toString(),
       moreInfo: moreInfo,
       status: "active",
     );
