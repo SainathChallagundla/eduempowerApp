@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:eduempower/models/beneficiarieDocuments.dart';
 import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:path/path.dart';
 
 class DocumentsPage extends StatefulWidget {
   final String id;
@@ -22,7 +22,6 @@ class DocumentsPage extends StatefulWidget {
 
 class DocumentsPageState extends State<DocumentsPage> {
   String documentTypeSelection, token, email, name, userCategory;
-  String _filePath;
 
   bool toEnable = false;
 
@@ -30,7 +29,7 @@ class DocumentsPageState extends State<DocumentsPage> {
 
   BeneficiarieDocuments data = BeneficiarieDocuments(); //edited line
 
-  List dropdownData = List();
+  List dropdownData = [];
 
   final String url =
       HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIE_DOCUMENTS;
@@ -100,7 +99,11 @@ class DocumentsPageState extends State<DocumentsPage> {
               child: const Icon(Icons.file_upload),
               tooltip: "select a file",
               elevation: 1,
-              onPressed: getFilePath)
+              onPressed: () {
+                setState(() {
+                  this.toEnable = true;
+                });
+              })
           : null,
     );
   }
@@ -144,18 +147,17 @@ class DocumentsPageState extends State<DocumentsPage> {
           children: <Widget>[
             TextField(
               decoration: new InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                  ),
-                  hintText: 'Enter file name',
-                  labelText: this._filePath != null ? this._filePath : ""),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.greenAccent, width: 1.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                ),
+                hintText: 'Enter file name',
+              ),
               controller: txtDescController,
               inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_-]"))
+                // WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_-]"))
               ],
               onChanged: (text) {
                 // name = text;
@@ -175,32 +177,33 @@ class DocumentsPageState extends State<DocumentsPage> {
         children: <Widget>[
           RaisedButton(
             child: Text("Upload"),
-            onPressed: () {
+            onPressed: () async {
               if (txtDescController.text == "") {
                 showSnackbar(context,
                     "File description to be provided before uploading");
                 // return;
               } else {
-                submitFileUplaod().then((Map<String, dynamic> resp) {
-                  try {
-                    var fileid = resp["fileId"][0];
-                    var document = Document(
-                        documentType: documentTypeSelection,
-                        documentName: txtDescController.text,
-                        documentId: fileid);
+                Map<String, dynamic> resp = await submitFileUplaod();
+                //submitFileUplaod().then((Map<String, dynamic> resp) {
+                try {
+                  var fileid = resp["fileId"][0];
+                  var document = Document(
+                      documentType: documentTypeSelection,
+                      documentName: txtDescController.text,
+                      documentId: fileid);
 
-                    String url = HttpEndPoints.BASE_URL +
-                        HttpEndPoints.ADD_BENEFICIARIE_DOCUMENT +
-                        widget.id;
+                  String url = HttpEndPoints.BASE_URL +
+                      HttpEndPoints.ADD_BENEFICIARIE_DOCUMENT +
+                      widget.id;
 
-                    HttpHelper()
-                        .submitBenificiarieDocument(url, token, document)
-                        .whenComplete(onFileUpload);
-                    // onFileUpload();
-                  } catch (e) {
-                    print(e);
-                  }
-                });
+                  HttpHelper()
+                      .submitBenificiarieDocument(url, token, document)
+                      .whenComplete(onFileUpload);
+                  // onFileUpload();
+                } catch (e) {
+                  print(e);
+                }
+                // );
 
                 setState(() {
                   this.toEnable = false;
@@ -228,76 +231,38 @@ class DocumentsPageState extends State<DocumentsPage> {
     return new Column();
   }
 
-  void getFilePath() async {
-    try {
-      setState(() {
-        this.toEnable = false;
-      });
-      /* String filePath = await FilePicker.getFilePath(type: FileType.image);
-      print("---------->" + filePath);
-      if (filePath == '') {
-        return;
-      }*/
-      FilePickerResult result =
-          await FilePicker.platform.pickFiles(type: FileType.any);
-      String filePath;
-      if (result != null) {
-        filePath = result.files.single.path ?? "";
-        // var fileBytes = result.files.first.bytes;
-
-// Find the ScaffoldMessenger in the widget tree
-// and use it to show a SnackBar.
-
-        // print(filePath);
-        // print(fileBytes);
-        //final filesnackBar = SnackBar(content: Text("$filePath }"));
-        //ScaffoldMessenger.of(context).showSnackBar(filesnackBar);
-      } else {
-        final snackBar = SnackBar(content: Text(filePath));
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-// Find the ScaffoldMessenger in the widget tree
-// and use it to show a SnackBar.
-        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        print(filePath);
-        print("-------------------->>>>>>>");
-        // return;
-        // User canceled the picker
-      }
-
-      setState(() {
-        this._filePath = filePath;
-        this.toEnable = true;
-      });
-    } on PlatformException catch (e) {
-      setState(() {
-        this.toEnable = false;
-      });
-      print("Error while picking the file: " + e.toString());
-    }
-  }
-
   Future<Map<String, dynamic>> submitFileUplaod() async {
     String url = HttpEndPoints.BASE_URL +
         "/v1/user/file?description=" +
         txtDescController.text;
     var purl = Uri.parse(url);
+    FilePickerResult result = await FilePicker.platform
+        .pickFiles(type: FileType.any, allowMultiple: false);
+
     http.MultipartRequest request = http.MultipartRequest('POST', purl);
     request.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-    http.MultipartFile multipartFile = await http.MultipartFile.fromPath(
-        'files', this._filePath); //returns a Future<MultipartFile>
-    request.files.add(multipartFile);
-
+    if (!kIsWeb) {
+      String filePath;
+      if (result != null) {
+        filePath = result.files.single.path ?? "";
+        http.MultipartFile multipartFile =
+            await http.MultipartFile.fromPath('files', filePath);
+        request.files.add(multipartFile);
+      }
+    } else {
+      var fileBytes = result.files.first.bytes;
+      http.MultipartFile multipartFile = new http.MultipartFile.fromBytes(
+          "files", fileBytes,
+          filename: basename(result.files.single.name));
+      request.files.add(multipartFile);
+    }
     try {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode != 200) {
-        // onFileUpload();
         return null;
       }
       final Map<String, dynamic> responseData = json.decode(response.body);
-
       return responseData;
     } catch (e) {
       print(e);

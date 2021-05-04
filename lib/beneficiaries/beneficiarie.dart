@@ -18,7 +18,7 @@ class BeneficiariePage extends StatefulWidget {
 
 class _BeneficiariePageState extends State<BeneficiariePage> {
   String _mySelection, token, email, name;
-  List data = List(); //edited line
+  List data = [];
   BeneficiarieTemplate templateData;
   bool isLoaded = false;
 
@@ -26,7 +26,7 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   final mainKey = GlobalKey<ScaffoldState>();
 
   //Map dataList = Map();
-  List<TemplateDataFields> dataList = List<TemplateDataFields>();
+  List<TemplateDataFields> dataList = [];
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
@@ -205,7 +205,7 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
                     key: Key("${templateData.templateFields[index]..name}"),
                     keyboardType: TextInputType.multiline,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
+                      FilteringTextInputFormatter.allow(
                           RegExp(templateData.templateFields[index].regex))
                     ],
                     maxLines: 2,
@@ -243,22 +243,28 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
   }
 
   void onSubmit(BuildContext context) async {
-    BeneficiarieDetails beneficiarieDetails = new BeneficiarieDetails(
-        name: name, templateName: templateData.templateName, user: email);
-    beneficiarieDetails.data = List<TemplateDataFields>();
-    beneficiarieDetails.data.addAll(dataList);
-    // Give status here
-    beneficiarieDetails.statusForFunding = "created";
-
-    var result = await beneficiarieDetails_helper.BeneficiarieDetails()
-        .addBenificiarieDetails(
-            HttpEndPoints.BASE_URL + HttpEndPoints.ADD_BENEFICIARY_DETAILS,
-            token,
-            beneficiarieDetails);
-    if (result.status == "success") {
-      Navigator.pop(context, true);
+    if (data == null || _mySelection == null) {
+      mainKey.currentState.showSnackBar(new SnackBar(
+          content: Text("Please Select Templete"),
+          duration: Duration(milliseconds: 1000)));
     } else {
-      Navigator.pop(context, false);
+      BeneficiarieDetails beneficiarieDetails = new BeneficiarieDetails(
+          name: name, templateName: templateData.templateName, user: email);
+      beneficiarieDetails.data = [];
+      beneficiarieDetails.data.addAll(dataList);
+      // Give status here
+      beneficiarieDetails.statusForFunding = "created";
+
+      var result = await beneficiarieDetails_helper.BeneficiarieDetails()
+          .addBenificiarieDetails(
+              HttpEndPoints.BASE_URL + HttpEndPoints.ADD_BENEFICIARY_DETAILS,
+              token,
+              beneficiarieDetails);
+      if (result.status == "success") {
+        Navigator.pop(context, true);
+      } else {
+        Navigator.pop(context, false);
+      }
     }
   }
 }

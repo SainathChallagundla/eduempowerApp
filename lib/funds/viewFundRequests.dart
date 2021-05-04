@@ -105,7 +105,6 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Text("Info:${fundRequestData[index].moreInfo}"),
-                        Text(fundRequestData[index].id)
                       ],
                     ),
                     IconButton(
