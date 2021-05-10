@@ -124,8 +124,6 @@ class _FundRequestPageState extends State<FundRequestPage> {
 
   Future<void> onSubmit(BuildContext context) async {
     FundRequest fundRequest = new FundRequest(
-      //id: id,
-      beneficiarieID: widget.id,
       fundRequired: fundRequired,
       fundRequiredBy: fundRequiredBy.toString(),
       moreInfo: moreInfo,
@@ -133,7 +131,10 @@ class _FundRequestPageState extends State<FundRequestPage> {
     );
 
     var result = await fundDetails_helper.FundDetails().addFundRequest(
-        HttpEndPoints.BASE_URL + HttpEndPoints.ADD_FUNDREQUEST,
+        HttpEndPoints.BASE_URL +
+            HttpEndPoints.ADD_FUNDREQUEST +
+            "/" +
+            widget.id,
         token,
         fundRequest);
     if (result.status == "success") {

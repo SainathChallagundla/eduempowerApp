@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:eduempower/contributorHomePage.dart';
-import 'package:convex_bottom_navigation/convex_bottom_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduempower/home2.dart';
 
@@ -41,34 +40,36 @@ class _ContributorMainPageState extends State<ContributorMainPage> {
         key: mainKey,
         resizeToAvoidBottomInset: false,
         body: Container(child: _children[_currentIndex]),
-        bottomNavigationBar: _contributorBottomNavigationBar());
+        bottomNavigationBar: getBottomNavigationBar());
   }
 
-  Widget _contributorBottomNavigationBar() {
-    return ConvexBottomNavigation(
-      barBackgroundColor: Colors.orange[300],
-      activeIconColor: Colors.black,
-      inactiveIconColor: Colors.grey,
-      textColor: Colors.black,
-      bigIconPadding: 15.0,
-      //circleSize: CircleSize.SMALL,
-      //smallIconPadding: 10.0,
-      //circleColor: Colors.black,
-      tabs: [
-        TabData(
-          icon: const Icon(Icons.home_outlined),
-          title: "home",
+  Widget getBottomNavigationBar() {
+    return BottomNavigationBar(
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.grey,
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      unselectedLabelStyle:
+          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      backgroundColor: Colors.orange[300],
+      type: BottomNavigationBarType.fixed,
+      onTap: onTabTapped, // new
+      currentIndex: _currentIndex, // new
+      items: [
+        new BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home'),
         ),
-        TabData(
-          icon: const Icon(Icons.person_pin_circle_sharp),
-          title: "beneficiary",
+        new BottomNavigationBarItem(
+          icon: Icon(Icons.group),
+          title: Text('Beneficiaries'),
         ),
       ],
-      onTabChangedListener: (int position) {
-        setState(() {
-          _currentIndex = position;
-        });
-      },
     );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }

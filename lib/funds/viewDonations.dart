@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/httphelper.dart';
-import 'package:eduempower/models/funds.dart' as funds_model;
+import 'package:eduempower/models/donations.dart' as funds_model;
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:eduempower/funds/viewFundDetails.dart';
+import 'package:eduempower/funds/viewDonationDetails.dart';
 
-class ViewFundsPage extends StatefulWidget {
-  final String title;
+class ViewDonationsListPage extends StatefulWidget {
+  final String title, id;
   @override
-  ViewFundsPageState createState() => ViewFundsPageState();
-  ViewFundsPage({Key key, this.title}) : super(key: key);
+  _ViewDonationsListPageState createState() => _ViewDonationsListPageState();
+  ViewDonationsListPage({Key key, this.title, this.id}) : super(key: key);
 }
 
-class ViewFundsPageState extends State<ViewFundsPage> {
-  String token, email, name, userType, userCategory;
+class _ViewDonationsListPageState extends State<ViewDonationsListPage> {
+  String token;
   bool reload = false;
   final mainKey = GlobalKey<ScaffoldState>();
 
-  List<funds_model.Fund> data = List<funds_model.Fund>(); //edited line
+  List<funds_model.Donation> data = []; //edited line
 
-  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDS;
+  //final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONS;
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    email = prefs.getString("email");
-    name = prefs.getString("name");
-    userType = prefs.getString("userType");
-    userCategory = prefs.getString("userCategory");
-    var list = await fundDetails_helper.FundDetails()
-        .getFundsByDonar(url, token, 0, 0, email);
+    var list = await fundDetails_helper.FundDetails().getDonationByDonar(
+        HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONS,
+        token,
+        0,
+        0,
+        widget.id);
 
     setState(() {
       data = list;
@@ -62,7 +62,7 @@ class ViewFundsPageState extends State<ViewFundsPage> {
     );
   }
 
-  ListView buildListView(List<funds_model.Fund> data) {
+  ListView buildListView(List<funds_model.Donation> data) {
     if (data != null) {
       return ListView.builder(
         itemCount: data?.length ?? 0,
@@ -70,17 +70,17 @@ class ViewFundsPageState extends State<ViewFundsPage> {
           return ListTile(
               // title: Text(data != null ? data[index].name : ""),
               title: Text(
-                data[index].amountProposed.toString() ?? "",
+                data[index].proposedAmount.toString() ?? "",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               trailing: Wrap(spacing: 12, children: <Widget>[
                 IconButton(
                     onPressed: () async {
-                      print(data[index].id);
+                      print(data[index].proposedAmount);
                       bool result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewFundDetailsPage(
+                            builder: (context) => ViewDonationsPage(
                                 id: data != null ? data[index].id : "")),
                       );
                       setState(() {

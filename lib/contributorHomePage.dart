@@ -26,8 +26,7 @@ class ContributorHomePageState extends State<ContributorHomePage> {
   bool reload = false;
   final mainKey = GlobalKey<ScaffoldState>();
 
-  List<beneficiarieDetails_model.BeneficiarieDetails> data =
-      List<beneficiarieDetails_model.BeneficiarieDetails>(); //edited line
+  List<beneficiarieDetails_model.BeneficiarieDetails> data = []; //edited line
 
   final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_BENEFICIARIES;
 
@@ -101,7 +100,12 @@ class ContributorHomePageState extends State<ContributorHomePage> {
             },
             value: _mySelection,
           ),
-          Expanded(child: buildcardListView(data))
+          Expanded(
+              child:
+                  //!kIsWeb ?
+                  buildcardListView(data)
+              // ;_gridView(data)
+              )
         ],
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -131,249 +135,154 @@ class ContributorHomePageState extends State<ContributorHomePage> {
         itemCount: data?.length ?? 0,
         itemBuilder: (context, index) {
           return Card(
+              margin: EdgeInsets.all(10),
               shape: RoundedRectangleBorder(
                 side: new BorderSide(color: Colors.orange[300], width: 1.0),
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "name: ${data != null ? data[index].name : ""}",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Status: ${data != null ? data[index].statusForFunding : ""}",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: <
-                      Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FlatButton.icon(
-                            shape: RoundedRectangleBorder(
-                              side: new BorderSide(
-                                width: 2.0,
-                                color: Colors.orange[300],
-                              ),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Colors.orange[300],
-                            onPressed: () async {
-                              bool result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewBeneficiariePage(
-                                        id: data != null
-                                            ? data[index].id
-                                            : "")),
-                              );
-                              setState(() {
-                                this.reload = result;
-                              });
-                              if (result == true) {
-                                this.getInit();
-                              }
-                            },
-                            icon: Icon(Icons.view_list_outlined),
-                            label: Text("View Beneficiary Details")),
-                        data[index].user == email
-                            ? Container()
-                            : FlatButton.icon(
-                                shape: RoundedRectangleBorder(
-                                  side: new BorderSide(
-                                    width: 2.0,
-                                    color: Colors.orange[300],
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0),
+              child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text("Name :"),
+                          Text(data != null ? data[index].name : ""),
+                        ],
+                      ),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                TextButton.icon(
+                                    // color: Colors.orange[300],
+                                    onPressed: () async {
+                                      bool result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewBeneficiariePage(
+                                                    id: data != null
+                                                        ? data[index].id
+                                                        : "")),
+                                      );
+                                      setState(() {
+                                        this.reload = result;
+                                      });
+                                      if (result == true) {
+                                        this.getInit();
+                                      }
+                                    },
+                                    icon: Icon(Icons.view_list_outlined),
+                                    label: Text("View Details")),
+                                data[index].user == email
+                                    ? Container()
+                                    : TextButton.icon(
+                                        icon: Icon(Icons.edit_outlined),
+                                        label: Text(
+                                          "Edit Details",
+                                          //style: TextStyle(color: Colors.black),
+                                        ),
+                                        onPressed: () async {
+                                          bool result = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditBeneficiariePage(
+                                                        id: data != null
+                                                            ? data[index].id
+                                                            : "")),
+                                          );
+                                          setState(() {
+                                            this.reload = result ?? false;
+                                          });
+                                          if (result ?? false) {
+                                            this.getInit();
+                                          }
+                                        },
+                                      ),
+                                TextButton.icon(
+                                  icon: Icon(Icons.file_present),
+                                  label: Text("Documents"),
+                                  onPressed: () async {
+                                    bool result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DocumentsPage(
+                                              id: data != null
+                                                  ? data[index].id
+                                                  : "")),
+                                    );
+                                    setState(() {
+                                      this.reload = result;
+                                    });
+                                    if (result == true) {
+                                      this.getInit();
+                                    }
+                                  },
                                 ),
-                                color: Colors.orange[300],
-                                icon: Icon(Icons.edit_outlined),
-                                label: Text("Edit Beneficiary Detaild"),
-                                onPressed: () async {
-                                  bool result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditBeneficiariePage(
-                                                id: data != null
-                                                    ? data[index].id
-                                                    : "")),
-                                  );
-                                  setState(() {
-                                    this.reload = result ?? false;
-                                  });
-                                  if (result ?? false) {
-                                    this.getInit();
-                                  }
-                                },
-                              ),
-                        FlatButton.icon(
-                          shape: RoundedRectangleBorder(
-                            side: new BorderSide(
-                              width: 2.0,
-                              color: Colors.orange[300],
+                              ],
                             ),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          color: Colors.orange[300],
-                          icon: Icon(Icons.file_present),
-                          label: Text("Documents"),
-                          onPressed: () async {
-                            bool result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DocumentsPage(
-                                      id: data != null ? data[index].id : "")),
-                            );
-                            setState(() {
-                              this.reload = result;
-                            });
-                            if (result == true) {
-                              this.getInit();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        data[index].statusForFunding == "approved" ||
-                                data[index].statusForFunding == "created"
-                            ? FlatButton.icon(
-                                shape: RoundedRectangleBorder(
-                                  side: new BorderSide(
-                                    width: 2.0,
-                                    color: Colors.orange[300],
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                color: Colors.orange[300],
-                                onPressed: () async {
-                                  bool result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FundRequestPage(
-                                            id: data != null
-                                                ? data[index].id
-                                                : "")),
-                                  );
-                                  setState(() {
-                                    this.reload = result ?? false;
-                                  });
-                                  if (result ?? false) {
-                                    this.getInit();
-                                  }
-                                },
-                                icon: Icon(Icons.request_page_rounded),
-                                label: Text("Request For Fund"))
-                            : Container(),
-                        FlatButton.icon(
-                            shape: RoundedRectangleBorder(
-                              side: new BorderSide(
-                                width: 2.0,
-                                color: Colors.orange[300],
-                              ),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Colors.orange[300],
-                            onPressed: () async {
-                              bool result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewFundRequestsPage(
-                                        id: data != null
-                                            ? data[index].id
-                                            : "")),
-                              );
-                              setState(() {
-                                this.reload = result ?? false;
-                              });
-                              if (result ?? false) {
-                                this.getInit();
-                              }
-                            },
-                            icon: Icon(Icons.money_rounded),
-                            label: Text("FundRequestes")),
-                        FlatButton.icon(
-                            shape: RoundedRectangleBorder(
-                              side: new BorderSide(
-                                width: 2.0,
-                                color: Colors.orange[300],
-                              ),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Colors.orange[300],
-                            onPressed: () {},
-                            icon: const Text(
-                              ("\u{20B9}"),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            label: Text("Add Fund"))
-                        // Text("hel/lo"),
-                        // Text("hel/lo")
-                      ],
-                    )
-                  ])
-                ],
-              ));
-          //  Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: <Widget>[
-          //     Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: <Widget>[
-          //         Text(
-          //           "name:${data != null ? data[index].name : ""}",
-          //           style: TextStyle(
-          //               fontSize: 20, fontWeight: FontWeight.bold),
-          //         ),
-          //         Text(data != null ? data[index].statusForFunding : ""),
-          //         Text(data != null ? data[index].lastUpdated : ""),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: <Widget>[
-          //             Column(
-          //                 mainAxisAlignment: MainAxisAlignment.start,
-          //                 children: <Widget>[
-          //                   IconButton(
-          //                     iconSize: 15,
-          //                     icon: Icon(Icons.edit_outlined),
-          //                     //label: Text("Edit Beneficiarie"),
-          //                     onPressed: () async {
-          //                       bool result = await Navigator.push(
-          //                         context,
-          //                         MaterialPageRoute(
-          //                             builder: (context) =>
-          //                                 EditBeneficiariePage(
-          //                                     id: data != null
-          //                                         ? data[index].id
-          //                                         : "")),
-          //                       );
-          //                       setState(() {
-          //                         this.reload = result ?? false;
-          //                       });
-          //                       if (result ?? false) {
-          //                         this.getInit();
-          //                       }
-          //                     },
-          //                   ),
-          //                   Text(
-          //                     "Edit Beneficiarie",
-          //                     style: TextStyle(fontSize: 10),
-          //                   )
-          //                 ])
-          //           ],
-          //         )
-          //       ],
-          //     ),
-          //     //_offsetPopup(index),
-          //   ],
-          // ));
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                data[index].statusForFunding == "approved"
+                                    //||data[index].statusForFunding == "created"
+                                    ? TextButton.icon(
+                                        onPressed: () async {
+                                          bool result = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FundRequestPage(
+                                                        id: data != null
+                                                            ? data[index].id
+                                                            : "")),
+                                          );
+                                          setState(() {
+                                            this.reload = result ?? false;
+                                          });
+                                          if (result ?? false) {
+                                            this.getInit();
+                                          }
+                                        },
+                                        icon: Icon(Icons.request_page_rounded),
+                                        label: Text("Request For Fund"))
+                                    : Container(),
+                                TextButton.icon(
+                                    onPressed: () async {
+                                      bool result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewFundRequestsPage(
+                                                    id: data != null
+                                                        ? data[index].id
+                                                        : "")),
+                                      );
+                                      setState(() {
+                                        this.reload = result ?? false;
+                                      });
+                                      if (result ?? false) {
+                                        this.getInit();
+                                      }
+                                    },
+                                    icon: Icon(Icons.money_rounded),
+                                    label: Text("Fund Requestes")),
+                              ],
+                            )
+                          ])
+                    ],
+                  )));
         },
       );
     } else {
@@ -381,111 +290,173 @@ class ContributorHomePageState extends State<ContributorHomePage> {
     }
   }
 
-  Widget _offsetPopup(index) => PopupMenuButton<int>(
-        itemBuilder: (context) => [
-          PopupMenuItem(
-              value: 1,
-              child: data[index].user == email
-                  ? Container()
-                  : FlatButton.icon(
-                      icon: Icon(Icons.edit_outlined),
-                      label: Text("Edit Beneficiarie"),
-                      onPressed: () async {
-                        bool result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditBeneficiariePage(
-                                  id: data != null ? data[index].id : "")),
-                        );
-                        setState(() {
-                          this.reload = result ?? false;
-                        });
-                        if (result ?? false) {
-                          this.getInit();
-                        }
-                      },
-                    )),
-          PopupMenuItem(
-              value: 2,
-              child: FlatButton.icon(
-                  onPressed: () async {
-                    bool result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ViewBeneficiariePage(
-                              id: data != null ? data[index].id : "")),
-                    );
-                    setState(() {
-                      this.reload = result;
-                    });
-                    if (result == true) {
-                      this.getInit();
-                    }
-                  },
-                  icon: Icon(Icons.view_list_outlined),
-                  label: Text("View Beneficiatie Details"))),
-          PopupMenuItem(
-            value: 3,
-            child: FlatButton.icon(
-              icon: Icon(Icons.file_present),
-              label: Text("Documents"),
-              onPressed: () async {
-                bool result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DocumentsPage(
-                          id: data != null ? data[index].id : "")),
-                );
-                setState(() {
-                  this.reload = result;
-                });
-                if (result == true) {
-                  this.getInit();
-                }
-              },
-            ),
-          ),
-          data[index].statusForFunding == "approved" ||
-                  data[index].statusForFunding == "created"
-              ? PopupMenuItem(
-                  value: 4,
-                  child: FlatButton.icon(
-                      onPressed: () async {
-                        bool result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FundRequestPage(
-                                  id: data != null ? data[index].id : "")),
-                        );
-                        setState(() {
-                          this.reload = result ?? false;
-                        });
-                        if (result ?? false) {
-                          this.getInit();
-                        }
-                      },
-                      icon: Icon(Icons.request_page_rounded),
-                      label: Text("Request For Fund")))
-              : PopupMenuItem(child: Container()),
-          PopupMenuItem(
-              child: FlatButton.icon(
-                  onPressed: () async {
-                    bool result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ViewFundRequestsPage(
-                              id: data != null ? data[index].id : "")),
-                    );
-                    setState(() {
-                      this.reload = result ?? false;
-                    });
-                    if (result ?? false) {
-                      this.getInit();
-                    }
-                  },
-                  icon: Icon(Icons.money_rounded),
-                  label: Text("Fund Requestes")))
-        ],
-        icon: Icon(Icons.format_list_bulleted),
-      );
+  GridView _gridView(List<beneficiarieDetails_model.BeneficiarieDetails> data) {
+    if (data != null) {
+      return GridView.count(
+          scrollDirection: Axis.vertical,
+          crossAxisCount: 2,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+          shrinkWrap: true,
+          // itemCount: data?.length ?? 0,
+          //  itemBuilder: (context, index)
+          children: List.generate(
+            data?.length ?? 0,
+            (index) {
+              return Card(
+                  margin: EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    side: new BorderSide(color: Colors.orange[300], width: 1.0),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Name :"),
+                              Text(data != null ? data[index].name : ""),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: <Widget>[
+                              TextButton.icon(
+                                  // color: Colors.orange[300],
+                                  onPressed: () async {
+                                    bool result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewBeneficiariePage(
+                                                  id: data != null
+                                                      ? data[index].id
+                                                      : "")),
+                                    );
+                                    setState(() {
+                                      this.reload = result;
+                                    });
+                                    if (result == true) {
+                                      this.getInit();
+                                    }
+                                  },
+                                  icon: Icon(Icons.view_list_outlined),
+                                  label: Text("View Details")),
+                              data[index].user == email
+                                  ? Container()
+                                  : TextButton.icon(
+                                      icon: Icon(Icons.edit_outlined),
+                                      label: Text(
+                                        "Edit Details",
+                                        //style: TextStyle(color: Colors.black),
+                                      ),
+                                      onPressed: () async {
+                                        bool result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditBeneficiariePage(
+                                                      id: data != null
+                                                          ? data[index].id
+                                                          : "")),
+                                        );
+                                        setState(() {
+                                          this.reload = result ?? false;
+                                        });
+                                        if (result ?? false) {
+                                          this.getInit();
+                                        }
+                                      },
+                                    ),
+                              TextButton.icon(
+                                icon: Icon(Icons.file_present),
+                                label: Text("Documents"),
+                                onPressed: () async {
+                                  bool result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DocumentsPage(
+                                            id: data != null
+                                                ? data[index].id
+                                                : "")),
+                                  );
+                                  setState(() {
+                                    this.reload = result;
+                                  });
+                                  if (result == true) {
+                                    this.getInit();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   mainAxisAlignment:
+                          //       MainAxisAlignment.spaceBetween,
+                          //   children: <Widget>[
+                          data[index].statusForFunding == "approved"
+                              //||data[index].statusForFunding == "created"
+                              ? TextButton.icon(
+                                  onPressed: () async {
+                                    bool result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FundRequestPage(
+                                              id: data != null
+                                                  ? data[index].id
+                                                  : "")),
+                                    );
+                                    setState(() {
+                                      this.reload = result ?? false;
+                                    });
+                                    if (result ?? false) {
+                                      this.getInit();
+                                    }
+                                  },
+                                  icon: Icon(Icons.request_page_rounded),
+                                  label: Text("Request For Fund"))
+                              : Container(),
+                          TextButton.icon(
+                              onPressed: () async {
+                                bool result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ViewFundRequestsPage(
+                                              id: data != null
+                                                  ? data[index].id
+                                                  : "")),
+                                );
+                                setState(() {
+                                  this.reload = result ?? false;
+                                });
+                                if (result ?? false) {
+                                  this.getInit();
+                                }
+                              },
+                              icon: Icon(Icons.money_rounded),
+                              label: Text("Fund Requestes")),
+                        ],
+                      )
+                      // ])
+                      // ],)
+                      ));
+            },
+          ));
+    } else {
+      return GridView.count(crossAxisCount: 3);
+    }
+  }
 }

@@ -6,7 +6,7 @@ import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:eduempower/models/beneficiarieDetails.dart';
 import 'package:eduempower/models/beneficiarieDataFields.dart';
 import 'package:eduempower/models/beneficiarieDocuments.dart';
-import 'package:eduempower/models/funds.dart';
+import 'package:eduempower/models/donations.dart';
 import 'package:eduempower/models/user.dart';
 import 'package:eduempower/models/summary.dart';
 import 'package:eduempower/models/fundRequest.dart' as fundrequest_model;
@@ -169,24 +169,11 @@ class HttpHelper {
     }
   }
 
-  Future<Fund> getFundById(String url, String id, String token) async {
+  Future<Donation> getDonationById(String url, String id, String token) async {
     final response = await http.get(Uri.parse(url + id),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      return Fund.fromJson(json.decode(response.body));
-      // return BeneficiarieDetails.fromJson(json.decode(response.body));
-    } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load the data');
-    }
-  }
-
-  Future<FundRequest> getFundRequestById(
-      String url, String id, String token) async {
-    final response = await http.get(Uri.parse(url + id),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    if (response.statusCode == 200) {
-      return FundRequest.fromJson(json.decode(response.body));
+      return Donation.fromJson(json.decode(response.body));
       // return BeneficiarieDetails.fromJson(json.decode(response.body));
     } else {
       // If that call was not successful, throw an error.
@@ -218,11 +205,11 @@ class HttpHelper {
     } else {
       uri = Uri.parse(url +
           "/" +
+          beneficiarieID +
+          "/" +
           skip.toString() +
           "/" +
-          limit.toString() +
-          "?beneficiarieID=" +
-          beneficiarieID);
+          limit.toString());
     }
     final response = await http
         .get(uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -253,57 +240,57 @@ class HttpEndPoints {
 
   static const String SIGN_IN = "v1/public/user/mobile/signin";
   static const String REGISTER = "v1/public/user/register";
-  static const String RESETPASSWORD = "v1/public/user/resetPassword";
-  static const String GET_USER = "v1/user/get/";
-  static const String GET_INDIVIDUAL = "v1/user/individual/get/";
-  static const String UPDATE_INDIVIDUAL = "v1/user/individual/updateBy/";
-  static const String GET_ORGANIZATION = "v1/user/organization/get/";
-  static const String UPDATE_ORGANIZATION = "v1/user/organization/updateBy/";
+  static const String RESETPASSWORD = "/v1/public/user/resetPassword";
+  static const String GET_USER = "/v1/private/user/get/";
+  static const String GET_INDIVIDUAL = "/v1/private/user/individual/get/";
+  static const String UPDATE_INDIVIDUAL = "/v1/private/user/individual/update/";
+  static const String GET_ORGANIZATION = "/v1/private/user/organization/get/";
+  static const String UPDATE_ORGANIZATION =
+      "/v1/private/user/organization/update/";
 
-  static const String GET_TEMPLATE_NAMES =
-      "v1/user/beneficiarie/template/getTemplateNames";
-  static const String GET_TEMPLATE = "v1/user/beneficiarie/template/get/";
+  static const String GET_TEMPLATE_NAMES = "/v1/private/template/getNames";
+  static const String GET_TEMPLATE = "/v1/private/template/get/";
 
-  static const String ADD_BENEFICIARY_DETAILS =
-      "v1/user/beneficiarie/details/add";
+  static const String ADD_BENEFICIARY_DETAILS = "/v1/private/beneficiarie/add";
 
   static const String UPDATE_BENEFICIARIE_FIELDS =
-      "v1/user/beneficiarie/details/UpdateBeneficiarieDataById/";
+      "/v1/private/beneficiarie/data/update/";
 
   static const String UPDATE_BENEFICIARIE_DETAILS_ID =
-      "v1/user/beneficiarie/details/UpdateBeneficiarieDetailsById/";
+      "/v1/private/beneficiarie/details/update/";
 
-  static const String GET_BENEFICIARIES =
-      "v1/user/beneficiarie/details/getBeneficiaries";
-
-  static const String GET_BENEFICIARIEBYID =
-      "v1/user/beneficiarie/details/getById/";
+  static const String GET_BENEFICIARIES = "v1/private/beneficiarie/getAll";
+  static const String GET_BENEFICIARIEBYID = "/v1/private/beneficiarie/getBy/";
 
   static const String GET_BENEFICIARIE_DOCUMENTS =
-      "v1/user/beneficiarie/details/getBeneficiarieDocuments/";
+      "/v1/private/beneficiarie/document/getAll";
+  static const String DELETE_BENEFICIARIE_DOCUMENTS =
+      "/v1/private/beneficiarie/document/delete/";
 
   static const String ADD_BENEFICIARIE_DOCUMENT =
-      "v1/user/beneficiarie/details/document/add/";
+      "/v1/private/beneficiarie/document/add/";
 
-  static const String GET_FILE = "v1/public/user/getFile/";
+  static const String UPLOAD_FILE = "/v1/private/file/upload?description=";
 
-  static const String ADD_FUND = "v1/fund/add";
+  static const String GET_FILE = "v1/private/file/get/";
+  static const String ADD_DONATION = "v1/private/donation/add";
 
-  static const String GET_FUNDS = "v1/fund/getFunds";
+  static const String GET_DONATIONS = "v1/private/donation/getAll";
 
-  static const String GET_FUNDSBYID = "v1/fund/get/";
+  static const String GET_DONATIONBYID = "/v1/private/donation/get/";
 
-  static const String GET_SUMMARY = "v1/user/getSummary";
+  static const String GET_SUMMARY = "v1/private/user/summary";
 
-  static const String ADD_FUNDREQUEST = "/v1/benificiare/fundrequest/add";
+  static const String ADD_FUNDREQUEST =
+      "/v1/private/beneficiarie/fundRequest/add/";
 
-  static const String GET_FUNDREQUESTBYID = "v1/benificiare/fundrequest/get/";
-
-  static const String GET_FUNDREQUESTS = "v1/benificiare/fundrequest/getFunds/";
-
+  static const String GET_FUNDREQUESTS =
+      "/v1/private/beneficiarie/fundRequest/getAll/";
   static const String UPDATE_FUNDREQUESTBYID =
-      "v1/benificiare/fundrequest/updateBy/";
+      "/v1/private/beneficiarie/fundRequest/update/";
 
   static const String DELETE_FUNDREQUESTBYID =
-      "v1/benificiare/fundrequest/delete/";
+      "/v1/private/beneficiarie/fundRequest/delete/";
+
+  static const String GET_DONARID = "v1/private/user/get/";
 }
