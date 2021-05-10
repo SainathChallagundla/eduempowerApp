@@ -1,9 +1,9 @@
+import 'package:eduempower/helpers/beneficiarieDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'dart:convert';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:file_picker/file_picker.dart';
@@ -42,7 +42,6 @@ class DocumentsPageState extends State<DocumentsPage> {
     token = prefs.getString("token");
     email = prefs.getString("email");
     userCategory = prefs.getString("userCategory");
-
     BeneficiarieDocuments list = await HttpHelper()
         .getBeneficiarieDocuments(url, widget.id, token, 0, 0);
     setState(() {
@@ -51,8 +50,10 @@ class DocumentsPageState extends State<DocumentsPage> {
   }
 
   Future<void> onFileUpload() async {
+    BuildContext context;
     BeneficiarieDocuments list = await HttpHelper()
         .getBeneficiarieDocuments(url, widget.id, token, 0, 0);
+    showSnackbar(context, "File Successfully Uploaded");
     setState(() {
       data = list;
     });
@@ -96,8 +97,8 @@ class DocumentsPageState extends State<DocumentsPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: userCategory == "contributor"
           ? FloatingActionButton(
-              child: const Icon(Icons.file_upload),
-              tooltip: "select a file",
+              child: const Icon(Icons.add),
+              tooltip: "Add Document",
               elevation: 1,
               onPressed: () {
                 setState(() {
@@ -233,7 +234,7 @@ class DocumentsPageState extends State<DocumentsPage> {
 
   Future<Map<String, dynamic>> submitFileUplaod() async {
     String url = HttpEndPoints.BASE_URL +
-        "/v1/user/file?description=" +
+        HttpEndPoints.UPLOAD_FILE +
         txtDescController.text;
     var purl = Uri.parse(url);
     FilePickerResult result = await FilePicker.platform
@@ -280,9 +281,21 @@ class DocumentsPageState extends State<DocumentsPage> {
         itemCount: data.documents?.length ?? 0,
         itemBuilder: (context, index) {
           return ListTile(
+            leading: userCategory == "contributor"
+                ? IconButton(
+                    onPressed: () {
+                      onDelSubSubmit(context, index);
+                    },
+                    icon: Icon(Icons.delete_outlined))
+                : Container(
+                    height: 0,
+                    width: 0,
+                  ),
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[Text(data.documents[index].documentName)]),
+                children: <Widget>[
+                  Expanded(child: Text(data.documents[index].documentName))
+                ]),
             trailing: IconButton(
                 icon: Icon(Icons.list),
                 onPressed:
@@ -296,9 +309,13 @@ class DocumentsPageState extends State<DocumentsPage> {
                         )));
               },*/
                     async {
-                  await launch(HttpEndPoints.BASE_URL +
-                      HttpEndPoints.GET_FILE +
-                      data.documents[index].documentId);
+                  await launch(
+                      HttpEndPoints.BASE_URL +
+                          HttpEndPoints.GET_FILE +
+                          data.documents[index].documentId,
+                      headers: {
+                        HttpHeaders.authorizationHeader: 'Bearer $token'
+                      });
                 }),
           );
         },
@@ -307,5 +324,15 @@ class DocumentsPageState extends State<DocumentsPage> {
       print("No Documents Foun ");
       return ListView();
     }
+  }
+
+  void onDelSubSubmit(BuildContext context, int index) async {
+    var result = await BeneficiarieDetails().deleteDocumentById(
+        HttpEndPoints.BASE_URL + HttpEndPoints.DELETE_BENEFICIARIE_DOCUMENTS,
+        widget.id,
+        data.documents[index].documentId,
+        token);
+    showSnackbar(context, "File Deleted Successfully");
+    getInit();
   }
 }

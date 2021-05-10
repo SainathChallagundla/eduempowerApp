@@ -1,10 +1,10 @@
 import 'package:eduempower/funds/editFundRequest.dart';
-import 'package:eduempower/models/fundRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
+import 'package:eduempower/models/beneficiariefundRequests.dart';
 
 class ViewFundRequestsPage extends StatefulWidget {
   final String id;
@@ -19,17 +19,22 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
   bool isLoaded = false;
 
   final mainKey = GlobalKey<ScaffoldState>();
-  List<FundRequest> fundRequestData = List<FundRequest>();
+  //List<FundRequest> fundRequestData = [];
+  BeneficiarieFundRequests fundRequestData =
+      BeneficiarieFundRequests(); //edited line
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    var details = await HttpHelper().getFundRequestsByBeneficiary(
-        HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDREQUESTS,
-        token,
-        0,
-        0,
-        widget.id);
+    var details =
+        await fundDetails_helper.FundDetails().getBeneficiarieFundRequest(
+      HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDREQUESTS,
+      widget.id,
+      token,
+      0,
+      0,
+    );
+
     //"all");
     setState(() {
       fundRequestData = details;
@@ -65,8 +70,9 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
 
   Widget gridView(BuildContext context) {
     if (isLoaded == true) {
+      var data = fundRequestData?.fundRequests?.length ?? 0;
       return new ListView.builder(
-        itemCount: fundRequestData?.length ?? 0,
+        itemCount: data ?? 0, //fundRequestData?.fundRequest?.length ?? 0,
         itemBuilder: (context, index) {
           return Card(
               shape: RoundedRectangleBorder(
@@ -74,19 +80,53 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("Fund Requested :"),
+                            Text(
+                              fundRequestData.fundRequests[index].fundRequired
+                                  .toString(),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("Info :"),
+                            Text(
+                              fundRequestData.fundRequests[index].moreInfo,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     IconButton(
                         onPressed: () async {
+                          print(fundRequestData.fundRequests[index].id);
                           bool result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => EditFundRequestPage(
-                                    requiredFund:
-                                        fundRequestData[index].fundRequired,
-                                    moreInfo: fundRequestData[index].moreInfo,
+                                    requiredFund: fundRequestData != null
+                                        ? fundRequestData
+                                            .fundRequests[index].fundRequired
+                                        : "",
+                                    moreInfo: fundRequestData != null
+                                        ? fundRequestData
+                                            .fundRequests[index].moreInfo
+                                        : "",
                                     id: fundRequestData != null
-                                        ? fundRequestData[index].id
+                                        ? fundRequestData.fundRequests[index].id
                                         : "")),
                           );
                           setState(() {
@@ -97,16 +137,6 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                           }
                         },
                         icon: Icon(Icons.edit_outlined)),
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          "Request Fund:${fundRequestData[index].fundRequired.toString()}",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text("Info:${fundRequestData[index].moreInfo}"),
-                      ],
-                    ),
                     IconButton(
                         onPressed: () async {
                           await onSubmit(context, index);
@@ -126,7 +156,7 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
   Future<void> onSubmit(BuildContext context, index) async {
     var result = await fundDetails_helper.FundDetails().deleteFundRequestById(
       HttpEndPoints.BASE_URL + HttpEndPoints.DELETE_FUNDREQUESTBYID,
-      fundRequestData[index].id,
+      widget.id + "/" + fundRequestData.fundRequests[index].id,
       token,
     );
     if (result.status == "success") {

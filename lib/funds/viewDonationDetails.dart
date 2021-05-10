@@ -1,28 +1,28 @@
-import 'package:eduempower/models/funds.dart';
+import 'package:eduempower/models/donations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/httphelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-class ViewFundDetailsPage extends StatefulWidget {
+class ViewDonationsPage extends StatefulWidget {
   final String id;
   @override
-  ViewFundDetailsPageState createState() => ViewFundDetailsPageState();
-  ViewFundDetailsPage({Key key, this.id}) : super(key: key);
+  _ViewDonationsPageeState createState() => _ViewDonationsPageeState();
+  ViewDonationsPage({Key key, this.id}) : super(key: key);
 }
 
-class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
+class _ViewDonationsPageeState extends State<ViewDonationsPage> {
   String token, email, name, userType, userCategory;
   bool reload = false;
   bool isLoaded = false;
 
   final mainKey = GlobalKey<ScaffoldState>();
-  Fund fundData = Fund();
+  Donation fundData = Donation();
 
   //List<funds_model.Fund> data = List<funds_model.Fund>(); //edited line
 
-  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDSBYID;
+  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONBYID;
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -32,8 +32,10 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
     name = prefs.getString("name");
     userType = prefs.getString("userType");
     userCategory = prefs.getString("userCategory");
-    var details = await HttpHelper().getFundById(
-        HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDSBYID, widget.id, token);
+    var details = await HttpHelper().getDonationById(
+        HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONBYID,
+        widget.id,
+        token);
     setState(() {
       fundData = details;
       isLoaded = true;
@@ -76,7 +78,7 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
                 TextFormField(
-                  initialValue: fundData.amountProposed.toString(),
+                  initialValue: fundData.proposedAmount.toString(),
                   keyboardType: TextInputType.number,
                   decoration: new InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -87,32 +89,6 @@ class ViewFundDetailsPageState extends State<ViewFundDetailsPage> {
                         borderSide: BorderSide(color: Colors.blue, width: 1.0),
                       ),
                       hintText: 'Enter Proposed Amount'),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  initialValue: fundData.modeOfPayment,
-                  decoration: new InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.greenAccent, width: 1.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                      ),
-                      hintText: 'Mode Of Payment'),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  initialValue: fundData.referenceNo,
-                  decoration: new InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.greenAccent, width: 1.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                      ),
-                      hintText: 'Referance No.'),
                 ),
                 SizedBox(height: 20),
                 TextFormField(

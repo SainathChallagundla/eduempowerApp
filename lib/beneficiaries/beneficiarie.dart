@@ -251,6 +251,8 @@ class _BeneficiariePageState extends State<BeneficiariePage> {
       BeneficiarieDetails beneficiarieDetails = new BeneficiarieDetails(
           name: name, templateName: templateData.templateName, user: email);
       beneficiarieDetails.data = [];
+      beneficiarieDetails.documents = [];
+      beneficiarieDetails.fundRequest = [];
       beneficiarieDetails.data.addAll(dataList);
       // Give status here
       beneficiarieDetails.statusForFunding = "created";

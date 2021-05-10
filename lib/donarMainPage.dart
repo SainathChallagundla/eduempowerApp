@@ -1,7 +1,10 @@
-import 'package:eduempower/funds/viewfunds.dart';
+import 'package:eduempower/funds/viewDonations.dart';
+import 'package:eduempower/helpers/httphelper.dart';
 import 'package:flutter/material.dart';
 import 'package:eduempower/donarHomePage.dart';
 import 'package:eduempower/home2.dart';
+import 'package:eduempower/helpers/fundDetails.dart' as for_donarid;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DonarMainPage extends StatefulWidget {
   String title;
@@ -15,10 +18,33 @@ class _DonarMainPageState extends State<DonarMainPage> {
   int _currentIndex = 0;
   List<Widget> _children = [];
   final mainKey = GlobalKey<ScaffoldState>();
+  var donarid;
+  void getInt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+    email = prefs.getString("email");
+    var _donarid = await for_donarid.FundDetails().getDonarId(
+        HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONARID + email, token);
+    setState(() {
+      donarid = _donarid.id;
+      print("==============donarid$donarid");
+    });
+    await prefs.setString("did", donarid);
+  }
+
+  @override
+  void initState() {
+    getInt();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _children = [MyHomePage(), DonarHomePage(), ViewFundsPage()];
+    _children = [
+      MyHomePage(),
+      DonarHomePage(),
+      ViewDonationsListPage(id: donarid)
+    ];
     return homeScaffold();
   }
 
@@ -28,7 +54,6 @@ class _DonarMainPageState extends State<DonarMainPage> {
       resizeToAvoidBottomInset: false,
       body: Container(child: _children[_currentIndex]),
       bottomNavigationBar: getBottomNavigationBar(),
-      //bottomNavigationBar: _BottomNavigationBar()
     );
   }
 

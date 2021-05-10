@@ -1,34 +1,34 @@
-import 'package:eduempower/funds/viewFundRequests.dart';
-import 'package:eduempower/models/fundRequest.dart';
+import 'package:eduempower/models/donations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:eduempower/helpers/httphelper.dart';
+import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:file_picker/file_picker.dart';
 
-class EditFundRequestPage extends StatefulWidget {
-  num requiredFund;
-  String moreInfo, id;
-  EditFundRequestPage({Key key, this.moreInfo, this.requiredFund, this.id})
-      : super(key: key);
+class AddDonationPage extends StatefulWidget {
+  final String id;
+
+  AddDonationPage({Key key, this.id}) : super(key: key);
 
   @override
-  _EditFundRequestPageState createState() => _EditFundRequestPageState();
+  _AddDonationPageState createState() => _AddDonationPageState();
 }
 
-class _EditFundRequestPageState extends State<EditFundRequestPage> {
-  String beneficiarieID, moreInfo, status, lastUpdated, token;
-  num fundRequired;
+class _AddDonationPageState extends State<AddDonationPage> {
+  String moreInfo, token, did;
+  double proposedAmount;
+  List data = List(); //edited line
+  BeneficiarieTemplate templateData;
+  bool isLoaded = false;
   final mainKey = GlobalKey<ScaffoldState>();
-  FundRequest fundRequestData = FundRequest();
-  int index;
-
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    print("==============");
-    print(widget.id);
+    did = prefs.getString("did");
+    print("============$did");
   }
 
   @override
@@ -43,7 +43,7 @@ class _EditFundRequestPageState extends State<EditFundRequestPage> {
       key: mainKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Text("Edit FundRequest",
+          title: Text("Add Funds",
               style: TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Logofont',
@@ -59,7 +59,6 @@ class _EditFundRequestPageState extends State<EditFundRequestPage> {
                   verticalDirection: VerticalDirection.down,
                   children: <Widget>[
                     TextFormField(
-                      initialValue: widget.requiredFund.toString(),
                       keyboardType: TextInputType.number,
                       decoration: new InputDecoration(
                           focusedBorder: OutlineInputBorder(
@@ -70,14 +69,13 @@ class _EditFundRequestPageState extends State<EditFundRequestPage> {
                             borderSide:
                                 BorderSide(color: Colors.blue, width: 1.0),
                           ),
-                          hintText: 'Enter Request Amount'),
+                          hintText: 'Enter Proposed Amount'),
                       onChanged: (text) {
-                        fundRequired = num.parse(text);
+                        proposedAmount = double.parse(text);
                       },
                     ),
                     SizedBox(height: 20),
                     TextFormField(
-                        initialValue: widget.moreInfo,
                         maxLines: 3,
                         decoration: new InputDecoration(
                             focusedBorder: OutlineInputBorder(
@@ -97,25 +95,22 @@ class _EditFundRequestPageState extends State<EditFundRequestPage> {
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.save),
           onPressed: () async {
-            var fundRequest = Map<String, dynamic>();
-            fundRequest["fundRequired"] = fundRequired;
-            fundRequest["moreInfo"] = moreInfo;
-            await onSubmit(context, fundRequest);
+            await onSubmit(context);
           }),
     );
   }
 
-  Future<void> onSubmit(
-      BuildContext context, Map<String, dynamic> fundRequest) async {
-    fundRequest["fundRequired"] = fundRequired;
-    fundRequest["moreInfo"] = moreInfo;
+  Future<void> onSubmit(BuildContext context) async {
+    Donation funds = new Donation(
+        did: did,
+        bid: widget.id,
+        proposedAmount: proposedAmount,
+        moreInfo: moreInfo,
+        donationStatus: []);
 
-    var result = await fundDetails_helper.FundDetails().updatefundRequestById(
-        HttpEndPoints.BASE_URL +
-            HttpEndPoints.UPDATE_FUNDREQUESTBYID +
-            widget.id,
-        token,
-        fundRequest);
+    print(proposedAmount);
+    var result = await fundDetails_helper.FundDetails().addDonation(
+        HttpEndPoints.BASE_URL + HttpEndPoints.ADD_DONATION, token, funds);
     if (result.status == "success") {
       Navigator.pop(context, true);
     } else {

@@ -1,3 +1,5 @@
+import 'package:eduempower/models/beneficiariefundRequests.dart';
+import 'package:eduempower/models/fundRequest.dart';
 import 'beneficiarieTemplate.dart';
 
 class BeneficiarieDetails {
@@ -6,6 +8,7 @@ class BeneficiarieDetails {
   final String templateName;
   List<TemplateDataFields> data;
   List<Document> documents;
+  List<FundRequest> fundRequest;
   String statusForFunding;
   final String status;
   final String lastUpdated;
@@ -17,6 +20,7 @@ class BeneficiarieDetails {
       this.templateName,
       this.data,
       this.documents,
+      this.fundRequest,
       this.statusForFunding,
       this.status,
       this.lastUpdated,
@@ -24,12 +28,13 @@ class BeneficiarieDetails {
 
   factory BeneficiarieDetails.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-
     var docs = json['documents'] as List;
-
+    var fundreq = json['fundRequest'] as List;
     List<TemplateDataFields> templateDataFieldsList =
         list.map((i) => TemplateDataFields.fromJson(i)).toList();
     List<Document> documents = docs.map((i) => Document.fromJson(i)).toList();
+    List<FundRequest> fundRequest =
+        fundreq.map((i) => FundRequest.fromJson(i)).toList();
 
     return BeneficiarieDetails(
       id: json['id'],
@@ -37,6 +42,7 @@ class BeneficiarieDetails {
       templateName: json['templateName'],
       data: templateDataFieldsList,
       documents: documents,
+      fundRequest: fundRequest,
       statusForFunding: json['statusForFunding'],
       status: json['status'],
       lastUpdated: json['lastUpdated'],
@@ -50,6 +56,7 @@ class BeneficiarieDetails {
     map["templateName"] = templateName;
     map["templateDataFields"] = data;
     map['documents'] = documents;
+    map['fundRequest'] = fundRequest;
     map['statusForFunding'] = statusForFunding;
     map["status"] = status;
     map["lastUpdated"] = lastUpdated;
@@ -63,6 +70,7 @@ class BeneficiarieDetails {
         "templateName": templateName,
         "data": data,
         "documents": documents,
+        "fundRequest": fundRequest,
         "statusForFunding": statusForFunding,
         "status": status,
         "lastUpdated": lastUpdated,

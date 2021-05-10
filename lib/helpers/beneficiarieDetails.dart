@@ -4,7 +4,7 @@ import 'package:eduempower/models/beneficiarieDetails.dart'
     as beneficiarieDetails_model;
 import 'package:eduempower/models/beneficiarieDataFields.dart'
     as beneficiarieDataFields_model;
-import 'package:eduempower/models/funds.dart' as fund_model;
+import 'package:eduempower/models/donations.dart' as fund_model;
 import 'package:http/http.dart' as http;
 import 'package:eduempower/models/response.dart';
 
@@ -78,15 +78,14 @@ class BeneficiarieDetails {
         json.decode(response.body), response.statusCode);
   }
 
-  Future<GeneralResponse> addFund(
-      String url, token, fund_model.Fund body) async {
-    var response = await http.post(Uri.parse(url), body: body, headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      HttpHeaders.authorizationHeader: 'Bearer $token',
-    });
-    print(response.body);
-    return GeneralResponse.fromJson(
-        json.decode(response.body), response.statusCode);
+  Future<GeneralResponse> deleteDocumentById(String url, String beneficiarieId,
+      String documentId, String token) async {
+    final response = await http.delete(
+        Uri.parse(url + "/" + beneficiarieId + "/" + documentId),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to load the data');
+    }
   }
 }
