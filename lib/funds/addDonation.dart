@@ -101,16 +101,20 @@ class _AddDonationPageState extends State<AddDonationPage> {
   }
 
   Future<void> onSubmit(BuildContext context) async {
-    Donation funds = new Donation(
-        did: did,
-        bid: widget.id,
-        proposedAmount: proposedAmount,
-        moreInfo: moreInfo,
-        donationStatus: []);
+    Donation donation = new Donation(
+      did: did,
+      bid: widget.id,
+      receivedAmount: 0,
+      proposedAmount: proposedAmount,
+      moreInfo: moreInfo,
+      donationStatus: [],
+    );
+    var ds = DonationStatusFields(
+        status: "proposed", statusOn: DateTime.now().toString());
+    donation.currentStatus = ds;
 
-    print(proposedAmount);
     var result = await fundDetails_helper.FundDetails().addDonation(
-        HttpEndPoints.BASE_URL + HttpEndPoints.ADD_DONATION, token, funds);
+        HttpEndPoints.BASE_URL + HttpEndPoints.ADD_DONATION, token, donation);
     if (result.status == "success") {
       Navigator.pop(context, true);
     } else {

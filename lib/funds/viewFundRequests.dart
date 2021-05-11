@@ -5,6 +5,7 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:eduempower/models/beneficiariefundRequests.dart';
+import 'package:eduempower/funds/addDonation.dart';
 
 class ViewFundRequestsPage extends StatefulWidget {
   final String id;
@@ -14,7 +15,7 @@ class ViewFundRequestsPage extends StatefulWidget {
 }
 
 class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
-  String token;
+  String token, userCategory, donarId;
   bool reload = false;
   bool isLoaded = false;
 
@@ -26,6 +27,9 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
+    userCategory = prefs.getString("userCategory");
+    donarId = prefs.getString("did");
+
     var details =
         await fundDetails_helper.FundDetails().getBeneficiarieFundRequest(
       HttpEndPoints.BASE_URL + HttpEndPoints.GET_FUNDREQUESTS,
@@ -87,6 +91,7 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        SizedBox(height: 10),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,38 +115,66 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
                         ),
                       ],
                     ),
-                    IconButton(
-                        onPressed: () async {
-                          print(fundRequestData.fundRequests[index].id);
-                          bool result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditFundRequestPage(
-                                    requiredFund: fundRequestData != null
-                                        ? fundRequestData
-                                            .fundRequests[index].fundRequired
-                                        : "",
-                                    moreInfo: fundRequestData != null
-                                        ? fundRequestData
-                                            .fundRequests[index].moreInfo
-                                        : "",
-                                    id: fundRequestData != null
-                                        ? fundRequestData.fundRequests[index].id
-                                        : "")),
-                          );
-                          setState(() {
-                            this.reload = result ?? false;
-                          });
-                          if (result ?? false) {
-                            this.getInit();
-                          }
-                        },
-                        icon: Icon(Icons.edit_outlined)),
-                    IconButton(
-                        onPressed: () async {
-                          await onSubmit(context, index);
-                        },
-                        icon: Icon(Icons.delete_forever_outlined))
+                    userCategory == "contributor"
+                        ? IconButton(
+                            onPressed: () async {
+                              print(fundRequestData.fundRequests[index].id);
+                              bool result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditFundRequestPage(
+                                        requiredFund: fundRequestData != null
+                                            ? fundRequestData
+                                                .fundRequests[index]
+                                                .fundRequired
+                                            : "",
+                                        moreInfo: fundRequestData != null
+                                            ? fundRequestData
+                                                .fundRequests[index].moreInfo
+                                            : "",
+                                        id: fundRequestData != null
+                                            ? fundRequestData
+                                                .fundRequests[index].id
+                                            : "")),
+                              );
+                              setState(() {
+                                this.reload = result ?? false;
+                              });
+                              if (result ?? false) {
+                                this.getInit();
+                              }
+                            },
+                            icon: Icon(Icons.edit_outlined))
+                        : Container(),
+                    userCategory == "contributor"
+                        ? IconButton(
+                            onPressed: () async {
+                              await onSubmit(context, index);
+                            },
+                            icon: Icon(Icons.delete_forever_outlined))
+                        : TextButton.icon(
+                            onPressed: () async {
+                              bool result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddDonationPage(
+                                        id: fundRequestData.id != null
+                                            ? fundRequestData.id
+                                            : "")),
+                              );
+                              setState(() {
+                                this.reload = result;
+                              });
+                              if (result == true) {
+                                this.getInit();
+                              }
+                            },
+                            label: Text(" Add Donation"),
+                            icon: const Text(
+                              ("  \u{20B9}"),
+                              style: TextStyle(fontSize: 20),
+                            )),
+                    SizedBox(height: 20),
                   ]));
         },
       );

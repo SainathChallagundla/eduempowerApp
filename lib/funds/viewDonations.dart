@@ -4,7 +4,6 @@ import 'package:eduempower/helpers/httphelper.dart';
 import 'package:eduempower/models/donations.dart' as funds_model;
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:eduempower/funds/viewDonationDetails.dart';
 
 class ViewDonationsListPage extends StatefulWidget {
   final String title, id;
@@ -19,18 +18,14 @@ class _ViewDonationsListPageState extends State<ViewDonationsListPage> {
   final mainKey = GlobalKey<ScaffoldState>();
 
   List<funds_model.Donation> data = []; //edited line
-
-  //final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONS;
+  var ds = funds_model.DonationStatusFields();
+  final String url = HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONS;
 
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    var list = await fundDetails_helper.FundDetails().getDonationByDonar(
-        HttpEndPoints.BASE_URL + HttpEndPoints.GET_DONATIONS,
-        token,
-        0,
-        0,
-        widget.id);
+    var list = await fundDetails_helper.FundDetails()
+        .getDonationByDonar(url, token, 0, 0, widget.id);
 
     setState(() {
       data = list;
@@ -41,10 +36,6 @@ class _ViewDonationsListPageState extends State<ViewDonationsListPage> {
   void initState() {
     super.initState();
     this.getInit();
-  }
-
-  dispose() {
-    super.dispose();
   }
 
   @override
@@ -58,45 +49,58 @@ class _ViewDonationsListPageState extends State<ViewDonationsListPage> {
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      body: buildListView(data),
+      body: buildcardListView(data),
     );
   }
+}
 
-  ListView buildListView(List<funds_model.Donation> data) {
-    if (data != null) {
-      return ListView.builder(
-        itemCount: data?.length ?? 0,
-        itemBuilder: (context, index) {
-          return ListTile(
-              // title: Text(data != null ? data[index].name : ""),
-              title: Text(
-                data[index].proposedAmount.toString() ?? "",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              trailing: Wrap(spacing: 12, children: <Widget>[
-                IconButton(
-                    onPressed: () async {
-                      print(data[index].proposedAmount);
-                      bool result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewDonationsPage(
-                                id: data != null ? data[index].id : "")),
-                      );
-                      setState(() {
-                        this.reload = result;
-                      });
-                      if (result == true) {
-                        this.getInit();
-                      }
-                    },
-                    icon: Icon(Icons.view_list_outlined))
-              ]));
-        },
-      );
-    } else {
-      print("no data....");
-      return ListView();
-    }
+ListView buildcardListView(List<funds_model.Donation> data) {
+  if (data != null) {
+    return ListView.builder(
+      itemCount: data?.length ?? 0,
+      itemBuilder: (context, index) {
+        return Card(
+            margin: EdgeInsets.all(10),
+            shape: RoundedRectangleBorder(
+              side: new BorderSide(color: Colors.orange[300], width: 1.0),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Beneficiarie Name :"),
+                        Text(data != null ? data[index].bid : ""),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Amount :"),
+                        Text(data != null
+                            ? data[index].proposedAmount.toString()
+                            : ""),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("MoreInfo :"),
+                        Text(data != null ? data[index].moreInfo : ""),
+                      ],
+                    ),
+                  ],
+                )));
+      },
+    );
+  } else {
+    return ListView();
   }
 }

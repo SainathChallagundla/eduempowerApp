@@ -33,7 +33,7 @@ class FundDetails {
             id),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      // print(response.body);
+      print(response.body);
       Iterable l = json.decode(response.body);
       if (l != null) {
         List<fund_model.Donation> list =
