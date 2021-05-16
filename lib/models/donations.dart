@@ -2,10 +2,11 @@ class Donation {
   final String id;
   final String did;
   final String bid;
+  final String frid;
   final num proposedAmount;
   final num receivedAmount;
   final String moreInfo;
-  final DonationStatusFields currentStatus;
+  DonationStatusFields currentStatus;
   List<DonationStatusFields> donationStatus;
   final String status;
   final String lastUpdated;
@@ -14,6 +15,7 @@ class Donation {
     this.id,
     this.did,
     this.bid,
+    this.frid,
     this.proposedAmount,
     this.receivedAmount,
     this.moreInfo,
@@ -27,25 +29,27 @@ class Donation {
     var ds = json['donationStatus'] as List;
     List<DonationStatusFields> donationStatus =
         ds.map((i) => DonationStatusFields.fromJson(i)).toList();
-
     return Donation(
       id: json['id'],
       did: json['did'],
       bid: json['bid'],
+      frid: json['frid'],
       proposedAmount: json['proposedAmount'],
       receivedAmount: json['receivedAmount'],
       moreInfo: json['moreInfo'],
-      currentStatus: json['currentStatus'],
+      currentStatus: DonationStatusFields.fromJson(json['currentStatus']),
       donationStatus: donationStatus,
       status: json['status'],
       lastUpdated: json['lastUpdated'],
     );
   }
+
   Map toMap() {
     var map = new Map<String, dynamic>();
     map["id"] = id;
     map["did"] = did;
     map["bid"] = bid;
+    map["frid"] = frid;
     map["proposedAmount"] = proposedAmount;
     map["receivedAmount"] = receivedAmount;
     map["moreInfo"] = moreInfo;
@@ -61,6 +65,7 @@ class Donation {
         "id": id,
         "did": did,
         "bid": bid,
+        "frid": frid,
         "proposedAmount": proposedAmount,
         "receivedAmount": receivedAmount,
         "moreInfo": moreInfo,
@@ -72,42 +77,37 @@ class Donation {
 }
 
 class DonationStatusFields {
-  String Id;
-  String Info;
-  String Status;
-  String StatusdOn;
-  String StatusBy;
-  DonationStatusFields({
-    this.Id,
-    this.Info,
-    this.Status,
-    this.StatusdOn,
-    this.StatusBy,
-  });
+  String id;
+  String info;
+  String status;
+  String statusOn;
+  String statusBy;
+  DonationStatusFields(
+      {this.id, this.info, this.status, this.statusOn, this.statusBy});
 
   factory DonationStatusFields.fromJson(Map<String, dynamic> json) {
     return DonationStatusFields(
-      Id: json['id'],
-      Info: json['info'],
-      Status: json['status'],
-      StatusdOn: json['statusOn'],
-      StatusBy: json['statusBy'],
+      id: json['id'],
+      info: json['info'],
+      status: json['status'],
+      statusOn: json['statusOn'],
+      statusBy: json['statusBy'],
     );
   }
   Map<String, dynamic> toJson() => {
-        "id": Id,
-        "info": Info,
-        "status": Status,
-        "statusOn": StatusdOn,
-        "statusBy": StatusBy,
+        "id": id,
+        "info": info,
+        "status": status,
+        "statusOn": statusOn,
+        "statusBy": statusBy,
       };
   Map toMap() {
     var map = new Map<String, dynamic>();
-    map["id"] = Id;
-    map["info"] = Info;
-    map["staus"] = Status;
-    map["statusOn"] = StatusdOn;
-    map["statusBy"] = StatusBy;
+    map["id"] = id;
+    map["info"] = info;
+    map["status"] = status;
+    map["statusOn"] = statusOn;
+    map["statusBy"] = statusBy;
     return map;
   }
 }

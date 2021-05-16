@@ -193,7 +193,7 @@ class HttpHelper {
     }
   }
 
-  Future<List<fundrequest_model.FundRequest>> getFundRequestsByBeneficiary(
+  Future<List<fundrequest_model.FundRequest>> getFundRequestsByBeneficiaryId(
       String url,
       String token,
       int skip,
@@ -215,8 +215,6 @@ class HttpHelper {
         .get(uri, headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
       Iterable l = json.decode(response.body);
-      print(response.body);
-
       if (l != null) {
         List<fundrequest_model.FundRequest> list = l
             .map((model) => fundrequest_model.FundRequest.fromJson(model))
@@ -285,12 +283,13 @@ class HttpEndPoints {
       "/v1/private/beneficiarie/fundRequest/add/";
 
   static const String GET_FUNDREQUESTS =
-      "/v1/private/beneficiarie/fundRequest/getAll/";
+      "v1/private/beneficiarie/fundRequest/getAll";
   static const String UPDATE_FUNDREQUESTBYID =
       "/v1/private/beneficiarie/fundRequest/update/";
 
   static const String DELETE_FUNDREQUESTBYID =
-      "/v1/private/beneficiarie/fundRequest/delete/";
+      "v1/private/beneficiarie/fundRequest/delete/";
 
   static const String GET_DONARID = "v1/private/user/get/";
+  static const String COMMON = "v1/private/donation/aggregate/";
 }

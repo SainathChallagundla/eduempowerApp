@@ -277,6 +277,7 @@ class DocumentsPageState extends State<DocumentsPage> {
 
   ListView buildListView(BeneficiarieDocuments data) {
     if (data != null) {
+      print("-------dfsdfsffdfsfdsfsdfs--------$token");
       return ListView.builder(
         itemCount: data.documents?.length ?? 0,
         itemBuilder: (context, index) {
@@ -298,8 +299,8 @@ class DocumentsPageState extends State<DocumentsPage> {
                 ]),
             trailing: IconButton(
                 icon: Icon(Icons.list),
-                onPressed:
-                    () /*async {
+                onPressed: () async {
+                  /*async {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => MyWebView(
                           "Documents",
@@ -308,20 +309,25 @@ class DocumentsPageState extends State<DocumentsPage> {
                               data.documents[index].documentId,
                         )));
               },*/
-                    async {
+
+                  showSnackbar(context, "File Deleted Successfully-----$token");
+
                   await launch(
                       HttpEndPoints.BASE_URL +
                           HttpEndPoints.GET_FILE +
                           data.documents[index].documentId,
-                      headers: {
-                        HttpHeaders.authorizationHeader: 'Bearer $token'
-                      });
+                      enableDomStorage: true,
+                      //forceSafariVC: true,
+                      //forceWebView: false,
+                      enableJavaScript: true,
+                      //universalLinksOnly: true,
+                      headers: <String, String>{'my_header_key': '$token'});
                 }),
           );
         },
       );
     } else {
-      print("No Documents Foun ");
+      print("No Documents Found ");
       return ListView();
     }
   }

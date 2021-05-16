@@ -2,29 +2,29 @@ import 'fundRequest.dart';
 
 class BeneficiarieFundRequests {
   final String id;
-  final List<FundRequest> fundRequests;
+  final List<FundRequest> fundRequest;
 
   BeneficiarieFundRequests({
     this.id,
-    this.fundRequests,
+    this.fundRequest,
   });
 
   factory BeneficiarieFundRequests.fromJson(Map<String, dynamic> json) {
     var list = json['fundRequest'] as List;
 
-    List<FundRequest> fundrequestsList =
+    List<FundRequest> fundRequest =
         list.map((i) => FundRequest.fromJson(i)).toList();
 
     return BeneficiarieFundRequests(
       id: json['id'],
-      fundRequests: fundrequestsList,
+      fundRequest: fundRequest,
     );
   }
   Map toMap() {
     var map = new Map<String, dynamic>();
     map["id"] = id;
 
-    map["fundRequest"] = fundRequests;
+    map["fundRequest"] = fundRequest;
 
     return map;
   }

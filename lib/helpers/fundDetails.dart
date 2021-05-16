@@ -2,10 +2,12 @@ import 'package:eduempower/models/response.dart';
 import 'package:eduempower/models/donations.dart' as fund_model;
 import 'package:eduempower/models/fundRequest.dart' as fundrequest_model;
 import 'package:eduempower/models/fundRequest.dart' as for_donarid;
-import 'package:eduempower/models/beneficiariefundRequests.dart';
+import 'package:eduempower/models/beneficiariefundRequests.dart'
+    as bfund_request;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:eduempower/models/common.dart' as common_details;
 
 class FundDetails {
   Future<GeneralResponse> addDonation(
@@ -33,7 +35,7 @@ class FundDetails {
             id),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      // print(response.body);
+      print(response.body);
       Iterable l = json.decode(response.body);
       if (l != null) {
         List<fund_model.Donation> list =
@@ -61,15 +63,15 @@ class FundDetails {
         json.decode(response.body), response.statusCode);
   }
 
-  Future<BeneficiarieFundRequests> getBeneficiarieFundRequest(
+  Future<bfund_request.BeneficiarieFundRequests> getBeneficiarieFundRequest(
       String url, String id, String token, int skip, int limit) async {
     final response = await http.get(
         Uri.parse(
             url + "/" + id + "/" + skip.toString() + "/" + limit.toString()),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
-      return BeneficiarieFundRequests.fromJson(json.decode(response.body));
-      // return BeneficiarieDetails.fromJson(json.decode(response.body));
+      return bfund_request.BeneficiarieFundRequests.fromJson(
+          json.decode(response.body));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load the data');
@@ -97,7 +99,6 @@ class FundDetails {
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
     } else {
-      print("------------------------------------------------------");
       // If that call was not successful, throw an error.
       throw Exception('Failed to load the data');
     }
@@ -113,5 +114,22 @@ class FundDetails {
     });
     return GeneralResponse.fromJson(
         json.decode(response.body), response.statusCode);
+  }
+
+  Future<common_details.BeneficiarieData> common(
+    String url,
+    String id,
+    String token,
+  ) async {
+    final response = await http.get(Uri.parse(url + id),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return common_details.BeneficiarieData.fromJson(
+          json.decode(response.body));
+      // return BeneficiarieDetails.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load the data');
+    }
   }
 }
