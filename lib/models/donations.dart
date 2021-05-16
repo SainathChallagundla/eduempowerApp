@@ -2,6 +2,7 @@ class Donation {
   final String id;
   final String did;
   final String bid;
+  final String frid;
   final num proposedAmount;
   final num receivedAmount;
   final String moreInfo;
@@ -14,6 +15,7 @@ class Donation {
     this.id,
     this.did,
     this.bid,
+    this.frid,
     this.proposedAmount,
     this.receivedAmount,
     this.moreInfo,
@@ -31,10 +33,11 @@ class Donation {
       id: json['id'],
       did: json['did'],
       bid: json['bid'],
+      frid: json['frid'],
       proposedAmount: json['proposedAmount'],
       receivedAmount: json['receivedAmount'],
       moreInfo: json['moreInfo'],
-      //currentStatus: json['currentStatus'],
+      currentStatus: DonationStatusFields.fromJson(json['currentStatus']),
       donationStatus: donationStatus,
       status: json['status'],
       lastUpdated: json['lastUpdated'],
@@ -46,6 +49,7 @@ class Donation {
     map["id"] = id;
     map["did"] = did;
     map["bid"] = bid;
+    map["frid"] = frid;
     map["proposedAmount"] = proposedAmount;
     map["receivedAmount"] = receivedAmount;
     map["moreInfo"] = moreInfo;
@@ -61,6 +65,7 @@ class Donation {
         "id": id,
         "did": did,
         "bid": bid,
+        "frid": frid,
         "proposedAmount": proposedAmount,
         "receivedAmount": receivedAmount,
         "moreInfo": moreInfo,
