@@ -124,6 +124,164 @@ class ContributorHomePageState extends State<ContributorHomePage> {
       return ListView.builder(
         itemCount: data?.length ?? 0,
         itemBuilder: _itemBuilder,
+
+        // itemBuilder: (context, index) {
+        //   return Card(
+        //       margin: EdgeInsets.all(10),
+        //       shape: RoundedRectangleBorder(
+        //         side: new BorderSide(color: Colors.orange[300], width: 1.0),
+        //         borderRadius: BorderRadius.circular(15.0),
+        //       ),
+        //       child: Container(
+        //           padding: EdgeInsets.all(10),
+        //           child: Column(
+        //               crossAxisAlignment: CrossAxisAlignment.start,
+        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //               children: <Widget>[
+        //                 Row(
+        //                   crossAxisAlignment: CrossAxisAlignment.start,
+        //                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                   children: <Widget>[
+        //                     Text("Name :"),
+        //                     Text(data != null ? data[index].name : ""),
+        //                   ],
+        //                 ),
+        //                 Row(
+        //                     crossAxisAlignment: CrossAxisAlignment.start,
+        //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                     children: <Widget>[
+        //                       Column(
+        //                         crossAxisAlignment: CrossAxisAlignment.start,
+        //                         mainAxisAlignment:
+        //                             MainAxisAlignment.spaceBetween,
+        //                         children: <Widget>[
+        //                           TextButton.icon(
+        //                               // color: Colors.orange[300],
+        //                               onPressed: () async {
+        //                                 bool result = await Navigator.push(
+        //                                   context,
+        //                                   MaterialPageRoute(
+        //                                       builder: (context) =>
+        //                                           ViewBeneficiariePage(
+        //                                               id: data != null
+        //                                                   ? data[index].id
+        //                                                   : "")),
+        //                                 );
+        //                                 setState(() {
+        //                                   this.reload = result;
+        //                                 });
+        //                                 if (result == true) {
+        //                                   this.getInit();
+        //                                 }
+        //                               },
+        //                               icon: Icon(Icons.view_list_outlined),
+        //                               label: Text("View Details")),
+        //                           data[index].user == email
+        //                               ? Container()
+        //                               : TextButton.icon(
+        //                                   icon: Icon(Icons.edit_outlined),
+        //                                   label: Text(
+        //                                     "Edit Details",
+        //                                     //style: TextStyle(color: Colors.black),
+        //                                   ),
+        //                                   onPressed: () async {
+        //                                     bool result =
+        //                                         await Navigator.push(
+        //                                       context,
+        //                                       MaterialPageRoute(
+        //                                           builder: (context) =>
+        //                                               EditBeneficiariePage(
+        //                                                   id: data != null
+        //                                                       ? data[index].id
+        //                                                       : "")),
+        //                                     );
+        //                                     setState(() {
+        //                                       this.reload = result ?? false;
+        //                                     });
+        //                                     if (result ?? false) {
+        //                                       this.getInit();
+        //                                     }
+        //                                   },
+        //                                 ),
+        //                           TextButton.icon(
+        //                             icon: Icon(Icons.file_present),
+        //                             label: Text("Documents"),
+        //                             onPressed: () async {
+        //                               bool result = await Navigator.push(
+        //                                 context,
+        //                                 MaterialPageRoute(
+        //                                     builder: (context) =>
+        //                                         DocumentsPage(
+        //                                             id: data != null
+        //                                                 ? data[index].id
+        //                                                 : "")),
+        //                               );
+        //                               setState(() {
+        //                                 this.reload = result;
+        //                               });
+        //                               if (result == true) {
+        //                                 this.getInit();
+        //                               }
+        //                             },
+        //                           ),
+        //                         ],
+        //                       ),
+        //                       Column(
+        //                           crossAxisAlignment:
+        //                               CrossAxisAlignment.start,
+        //                           mainAxisAlignment:
+        //                               MainAxisAlignment.spaceBetween,
+        //                           children: <Widget>[
+        //                             data[index].statusForFunding == "approved"
+        //                                 //||data[index].statusForFunding == "created"
+        //                                 ? TextButton.icon(
+        //                                     onPressed: () async {
+        //                                       bool result =
+        //                                           await Navigator.push(
+        //                                         context,
+        //                                         MaterialPageRoute(
+        //                                             builder: (context) =>
+        //                                                 FundRequestPage(
+        //                                                     id: data != null
+        //                                                         ? data[index]
+        //                                                             .id
+        //                                                         : "")),
+        //                                       );
+        //                                       setState(() {
+        //                                         this.reload = result ?? false;
+        //                                       });
+        //                                       if (result ?? false) {
+        //                                         this.getInit();
+        //                                       }
+        //                                     },
+        //                                     icon: Icon(
+        //                                         Icons.request_page_rounded),
+        //                                     label: Text("Request For Fund"))
+        //                                 : Container(),
+        //                             TextButton.icon(
+        //                                 onPressed: () async {
+        //                                   bool result = await Navigator.push(
+        //                                     context,
+        //                                     MaterialPageRoute(
+        //                                         builder: (context) =>
+        //                                             ViewFundRequestsPage(
+        //                                                 id: data != null
+        //                                                     ? data[index].id
+        //                                                     : "")),
+        //                                   );
+        //                                   setState(() {
+        //                                     this.reload = result ?? false;
+        //                                   });
+        //                                   if (result ?? false) {
+        //                                     this.getInit();
+        //                                   }
+        //                                 },
+        //                                 icon: Icon(Icons.money_rounded),
+        //                                 label: Text("Fund Requestes"))
+        //                           ])
+        //                     ])
+        //               ])));
+        // }
       );
     } else {
       return ListView();

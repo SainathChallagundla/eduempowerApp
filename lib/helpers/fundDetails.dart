@@ -117,6 +117,7 @@ class FundDetails {
   }
 
   Future<List<common_details.BeneficiarieData>> common(
+  Future<common_details.BeneficiarieData> common(
     String url,
     String id,
     String token,
@@ -133,6 +134,9 @@ class FundDetails {
       } else {
         return null;
       }
+      return common_details.BeneficiarieData.fromJson(
+          json.decode(response.body));
+      // return BeneficiarieDetails.fromJson(json.decode(response.body));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load the data');

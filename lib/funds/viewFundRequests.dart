@@ -211,6 +211,7 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
     var result = await fundDetails_helper.FundDetails().deleteFundRequestById(
       HttpEndPoints.BASE_URL + HttpEndPoints.DELETE_FUNDREQUESTBYID,
       widget.id + "/" + freqList.fundRequest[index].id,
+      freqList.fundRequest[index].id + "/" + widget.id,
       token,
     );
     if (result.status == "success") {
