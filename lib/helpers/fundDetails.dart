@@ -116,6 +116,7 @@ class FundDetails {
         json.decode(response.body), response.statusCode);
   }
 
+  Future<List<common_details.BeneficiarieData>> common(
   Future<common_details.BeneficiarieData> common(
     String url,
     String id,
@@ -124,6 +125,15 @@ class FundDetails {
     final response = await http.get(Uri.parse(url + id),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     if (response.statusCode == 200) {
+      Iterable l = json.decode(response.body);
+      if (l != null) {
+        List<common_details.BeneficiarieData> list = l
+            .map((model) => common_details.BeneficiarieData.fromJson(model))
+            .toList();
+        return list;
+      } else {
+        return null;
+      }
       return common_details.BeneficiarieData.fromJson(
           json.decode(response.body));
       // return BeneficiarieDetails.fromJson(json.decode(response.body));

@@ -70,6 +70,7 @@ class DonarHomePageState extends State<DonarHomePage> {
         ));
   }
 
+
   // Widget buildcardListView(
   //     List<beneficiarieDetails_model.BeneficiarieDetails> data) {
   //   if (data != null) {
@@ -199,6 +200,87 @@ class DonarHomePageState extends State<DonarHomePage> {
         ),
       ),
     );
+  }
+
+  List<Widget> _getWidgetListAll(
+      beneficiarieDetails_model.BeneficiarieDetails details) {
+    List<Widget> listWidgets = [];
+
+    var nameWidget = _getTextField(details.name, "Name", "");
+
+    var fundingStatusWidget =
+        _getTextField(details.statusForFunding, "Funding Status", "");
+    var statusWidget = _getTextField(details.status, "Status", "");
+
+    listWidgets.add(nameWidget);
+
+    listWidgets.addAll(_getWidgetList(details.data));
+    listWidgets.add(fundingStatusWidget);
+    listWidgets.add(statusWidget);
+    listWidgets.add(Container(
+        width: 150.0,
+        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+        child: OutlinedButton(
+          child: Text("Documents"),
+          onPressed: () async {
+            bool result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentsPage(id: details != null ? details.id : "")),
+            );
+            setState(() {
+              this.reload = result;
+            });
+            if (result == true) {
+              this.getInit();
+            }
+          },
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(color: Colors.red)))),
+        )));
+    listWidgets.add(Container(
+        width: 150.0,
+        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+        child: OutlinedButton(
+          child: Text("Fund Requests"),
+          onPressed: () async {
+            bool result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ViewFundRequestsPage(
+                      id: details != null ? details.id : "")),
+            );
+            setState(() {
+              this.reload = result ?? false;
+            });
+            if (result ?? false) {
+              this.getInit();
+            }
+          },
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(color: Colors.red)))),
+        )));
+
+    return listWidgets;
+  }
+
+  List<Widget> _getWidgetList(
+      List<beneficiarieDetails_model.TemplateDataFields> data) {
+    List<Widget> listWidgets = [];
+    data.forEach((element) {
+      listWidgets
+          .add(_getTextField(element.value, element.header, element.name));
+    });
+    return listWidgets;
+  }
+
   }
 
   List<Widget> _getWidgetListAll(

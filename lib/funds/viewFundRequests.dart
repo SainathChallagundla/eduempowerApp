@@ -174,6 +174,7 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
             child: OutlinedButton(
               onPressed: () async {
                 await onSubmit(context, index);
+                this.getInit();
               },
               child: Text("Delete Request"),
               style: ButtonStyle(
@@ -209,6 +210,7 @@ class ViewFundRequestsPageState extends State<ViewFundRequestsPage> {
   Future<void> onSubmit(BuildContext context, index) async {
     var result = await fundDetails_helper.FundDetails().deleteFundRequestById(
       HttpEndPoints.BASE_URL + HttpEndPoints.DELETE_FUNDREQUESTBYID,
+      widget.id + "/" + freqList.fundRequest[index].id,
       freqList.fundRequest[index].id + "/" + widget.id,
       token,
     );

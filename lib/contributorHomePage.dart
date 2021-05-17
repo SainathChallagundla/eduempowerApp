@@ -60,13 +60,11 @@ class ContributorHomePageState extends State<ContributorHomePage> {
       appBar: AppBar(
           centerTitle: true,
           title: Text("Beneficiaries",
-              //widget.title,
               style: TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Logofont',
                   fontWeight: FontWeight.bold,
                   fontSize: 20))),
-      // body: buildcardListView(data),
       body: Container(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -126,6 +124,7 @@ class ContributorHomePageState extends State<ContributorHomePage> {
       return ListView.builder(
         itemCount: data?.length ?? 0,
         itemBuilder: _itemBuilder,
+
         // itemBuilder: (context, index) {
         //   return Card(
         //       margin: EdgeInsets.all(10),
