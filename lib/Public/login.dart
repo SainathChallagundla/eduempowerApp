@@ -332,7 +332,7 @@ class _UserLoginState extends State<UserLogin> {
                     : ContributorMainPage(
                         title: "Edu EmPower",
                       )));
-      } else {
+      } else if (result.httpStatus == 400) {
         var snackbar = SnackBar(
           content: Text(result.message.toString()),
           duration: Duration(milliseconds: 1000),

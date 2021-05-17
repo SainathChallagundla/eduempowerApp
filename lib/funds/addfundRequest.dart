@@ -1,4 +1,3 @@
-import 'package:eduempower/funds/viewFundRequests.dart';
 import 'package:eduempower/models/fundRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +23,7 @@ class _FundRequestPageState extends State<FundRequestPage> {
   void getInit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
+    print(widget.id);
   }
 
   @override
@@ -88,17 +88,18 @@ class _FundRequestPageState extends State<FundRequestPage> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    RaisedButton(
-                      color: Colors.orange[300],
-                      onPressed: () => _selectDate(context),
-                      child: Text('Select date FundRequiredBy'),
-                    ),
-                    Text(
-                      "AmountRequiredBy:${fundRequiredBy.toLocal()}"
-                          .split(' ')[0],
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                    ElevatedButton(
+                        //color: Colors.orange[300],
+                        onPressed: () => _selectDate(context),
+                        child: Text(
+                            'Select date FundRequiredBy:${fundRequiredBy.toLocal()}')),
+
+                    // Text(
+                    //   "AmountRequiredBy:${fundRequiredBy.toLocal()}"
+                    //       .split(' ')[0],
+                    //   style:
+                    //       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    // ),
                   ]))),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

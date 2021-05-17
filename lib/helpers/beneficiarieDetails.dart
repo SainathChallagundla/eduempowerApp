@@ -4,7 +4,6 @@ import 'package:eduempower/models/beneficiarieDetails.dart'
     as beneficiarieDetails_model;
 import 'package:eduempower/models/beneficiarieDataFields.dart'
     as beneficiarieDataFields_model;
-import 'package:eduempower/models/donations.dart' as fund_model;
 import 'package:http/http.dart' as http;
 import 'package:eduempower/models/response.dart';
 

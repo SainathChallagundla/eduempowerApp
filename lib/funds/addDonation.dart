@@ -6,12 +6,11 @@ import 'package:eduempower/models/beneficiarieTemplate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:eduempower/helpers/fundDetails.dart' as fundDetails_helper;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:file_picker/file_picker.dart';
 
 class AddDonationPage extends StatefulWidget {
-  final String id;
+  final String bid, frid;
 
-  AddDonationPage({Key key, this.id}) : super(key: key);
+  AddDonationPage({Key key, this.bid, this.frid}) : super(key: key);
 
   @override
   _AddDonationPageState createState() => _AddDonationPageState();
@@ -20,7 +19,6 @@ class AddDonationPage extends StatefulWidget {
 class _AddDonationPageState extends State<AddDonationPage> {
   String moreInfo, token, did;
   double proposedAmount;
-  List data = List(); //edited line
   BeneficiarieTemplate templateData;
   bool isLoaded = false;
   final mainKey = GlobalKey<ScaffoldState>();
@@ -28,7 +26,7 @@ class _AddDonationPageState extends State<AddDonationPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
     did = prefs.getString("did");
-    print("============$did");
+    print(widget.frid);
   }
 
   @override
@@ -103,7 +101,8 @@ class _AddDonationPageState extends State<AddDonationPage> {
   Future<void> onSubmit(BuildContext context) async {
     Donation donation = new Donation(
       did: did,
-      bid: widget.id,
+      bid: widget.bid,
+      frid: widget.frid,
       receivedAmount: 0,
       proposedAmount: proposedAmount,
       moreInfo: moreInfo,
